@@ -1,10 +1,10 @@
 Windows 10 Virtual Desktop Assistant
 ===
 
-This application will enhance the Windows 10 multiple desktops feature.
+This application enhances the Windows 10 multiple desktops feature.
 By default you can switch to the next/previous desktops by pressing [Windows + Ctrl + (Left or Right Arrow)].
-This will allow you to switch to each specific desktop on demand with new keyboard shortcuts.
-It will also allow you have a custom wallpaper per desktop.
+This allows you to switch to each specific desktop on demand with new keyboard shortcuts.
+It also allows you to have a custom wallpaper per desktop.
 
 ## Installation
 
@@ -34,9 +34,9 @@ A maximum of 9 desktops are supported.
 ### Tray Icon
 
 A new tray icon will be available. It indicates the number of the current desktop (1-9).
-If you click on it the desktop management screen will be displayed.
+If you click on it the desktop management screen is displayed.
 
-The icons will have white text over black background. An inverted color scheme is provided but will require minor tweaks to the script.
+The icons have white text over black background. An inverted color scheme is provided but will require minor tweaks to the script.
 
 ### Custom Wallpapers Per Desktop
 
@@ -48,5 +48,6 @@ If you set the path to empty (ex: "1=" instead of "1=./wallpapers/1.jpg") the wa
 
 ## Credits
 
-Credits to Ciantic (Jari Pennanen) for his library, which can be found [here](https://github.com/Ciantic/VirtualDesktopAccessor).
-Credits to the creator of the ReadINI AHK library, found [here](https://autohotkey.com/board/topic/33506-read-ini-file-in-one-go/).
+Thanks to Ciantic (Jari Pennanen) for his library, which can be found [here](https://github.com/Ciantic/VirtualDesktopAccessor).
+Thanks to the creator of the ReadINI AHK library, found [here](https://autohotkey.com/board/topic/33506-read-ini-file-in-one-go/).
+Thanks to the artists that created the packed wallpapers, whom I lost track of. Sorry.

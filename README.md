@@ -62,4 +62,5 @@ If you set the path to empty (ex: "1=" instead of "1=./wallpapers/1.jpg") the wa
 
 Thanks to Ciantic (Jari Pennanen) for his library and sample AHK script, which can be found [here](https://github.com/Ciantic/VirtualDesktopAccessor).
 Thanks to the creator of the ReadINI AHK library, found [here](https://autohotkey.com/board/topic/33506-read-ini-file-in-one-go/).
+Thanks to rob3110 on reddit for the extra white icon theme.
 Thanks to the artists that created the packed wallpapers, whom I lost track of. Sorry.

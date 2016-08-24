@@ -1,7 +1,7 @@
 Windows 10 Virtual Desktop Enhancer
 ===
 
-This application enhances the Windows 10 multiple desktops feature.
+This application enhances the Windows 10 virtual desktops feature.
 By default you can only switch to the next/previous desktops by pressing [Windows + Ctrl + (Left or Right Arrow)].
 This allows you to switch directly to each specific desktop on demand with new keyboard shortcuts.
 It also allows you to have a custom wallpaper per desktop.
@@ -30,21 +30,21 @@ While running, the following keyboard shortcuts are available:
     This is additionally available (by default) by pressing [Windows + Tab].
     You can move windows between desktops by dragging them while inside this screen.
 
-- [Left Alt + (1-9)]
+- [Left Alt + (0-9)]
 
-    Switch to the desktop for the respective key (ex: [LAlt + 3] goes to Desktop 3).
+    Switch to the desktop for the respective key (ex: [LAlt + 3] goes to Desktop 3 and [LAlt + 0] goes to Desktop 10).
 
 Note that to add a new desktop you can press the "New Desktop (+)" button on the desktop management screen.
-A maximum of 9 desktops are supported.
+A maximum of 10 desktops are supported.
 
 ### Tray Icon
 
-A new tray icon will be available. It indicates the number of the current desktop (1-9).
+A new tray icon will be available. It indicates the number of the current desktop (1-10).
 If you click on it the desktop management screen is displayed.
 
 The icons have white text over black background. An inverted color scheme (black text over white background) is also available.
 
-To change between both, go into the "icons" folder and extract either the "white.zip" or "black.zip" files, replacing any existing files. You can also use custom icons, by copying them into this folder and renaming them "1.ico" through "9.ico".
+To change between both, go into the "icons" folder and extract either the "white.zip" or "black.zip" files, replacing any existing files. You can also use custom icons, by copying them into this folder and renaming them "1.ico" through "10.ico".
 
 ### Custom Wallpapers Per Desktop
 

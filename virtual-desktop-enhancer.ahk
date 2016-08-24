@@ -53,6 +53,7 @@ ChangeDesktop(1)
 *<!7::
 *<!8::
 *<!9::
+*<!0::
     ChangeDesktop(substr(A_ThisHotkey, 0, 1))
 Return
 
@@ -88,7 +89,10 @@ GetNumberOfDesktops() {
 }
 
 ChangeDesktop(n) {
-    DllCall(GoToDesktopNumberProc, Int, n-1)
+	if (n == 0) {
+		n := 10
+	}
+	DllCall(GoToDesktopNumberProc, Int, n-1)
 }
 
 ChangeBackground(n) {

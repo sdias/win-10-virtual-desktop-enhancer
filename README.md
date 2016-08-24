@@ -46,9 +46,9 @@ A maximum of 10 desktops are supported.
 A new tray icon will be available. It indicates the number of the current desktop (1-10).
 If you click on it the desktop management screen is displayed.
 
-The icons have white text over black background. An inverted color scheme (black text over white background) is also available.
+The icons have white text over black background. Other icon themes are also available.
 
-To change between both, go into the "icons" folder and extract either the "white.zip" or "black.zip" files, replacing any existing files. You can also use custom icons, by copying them into this folder and renaming them "1.ico" through "10.ico".
+To change between them, go into the "icons" folder and extract the ZIP file for the theme you want to use, and replace any existing files if prompted. You can also use custom icons, by copying them into this folder and renaming them "1.ico" through "10.ico".
 
 ### Custom Wallpapers Per Desktop
 

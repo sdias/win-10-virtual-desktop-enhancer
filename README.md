@@ -52,11 +52,11 @@ To change between both, go into the "icons" folder and extract either the "white
 
 ### Custom Wallpapers Per Desktop
 
-To configure the wallpapers, edit the "settings.ini" file and set the paths of the wallpaper image files for the desktops you want.
-
-A few are included by default. The paths can be relative (ex: "./wallpapers/1.jpg") or absolute (ex: "C:\wallpapers\1.jpg").
-
-If you set the path to empty (ex: "1=" instead of "1=./wallpapers/1.jpg") the wallpaper won't change when you switch to that desktop.
+To configure the wallpapers, edit the "settings.ini" file.
+For each desktop, you can either set the wallpaper to be an image file or a fixed color.
+To use images, set the path of the image, either absolute or relative (ex: "1=C:\wallpapers\1.jpg", "2=./wallpapers/2.jpg").
+To use fixed colors, set the color in hexadecimal (ex: "3=ff0000" for red, "4=ff00" or "4=00ff00" for green).
+If you set the config of that desktop to empty (ex: "5=") the wallpaper won't change when you switch to that desktop.
 
 ## Credits
 

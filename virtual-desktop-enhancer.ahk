@@ -89,20 +89,36 @@ GetNumberOfDesktops() {
 }
 
 ChangeDesktop(n) {
-	if (n == 0) {
-		n := 10
-	}
-	DllCall(GoToDesktopNumberProc, Int, n-1)
+    if (n == 0) {
+        n := 10
+    }
+    DllCall(GoToDesktopNumberProc, Int, n-1)
 }
 
 ChangeBackground(n) {
-    filePath := Wallpapers%n%
-    isRelative := (substr(filePath, 1, 1) == ".")
-    if (isRelative) {
-        filePath := (A_WorkingDir . substr(filePath, 2))
+    line := Wallpapers%n%
+
+    isHex := RegExMatch(line, "^([0-9A-Fa-f]{1,6})", hexMatchTotal)
+
+    if (isHex) {
+        hexColorReversed := SubStr("00000" . hexMatchTotal1, -5)
+
+        RegExMatch(hexColorReversed, "^([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})", match)
+        hexColor := "0x" . match3 . match2 . match1, hexColor += 0
+
+        DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "", UInt, 1)
+        DllCall("SetSysColors", "Int", 1, "Int*", 1, "UInt*", hexColor)
     }
-    if (filePath and FileExist(filePath)) {
-        DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, filePath, UInt, 1)
+    else {
+        filePath := line
+
+        isRelative := (substr(filePath, 1, 1) == ".")
+        if (isRelative) {
+            filePath := (A_WorkingDir . substr(filePath, 2))
+        }
+        if (filePath and FileExist(filePath)) {
+            DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, filePath, UInt, 1)
+        }
     }
 }
 
@@ -115,5 +131,3 @@ Focus() {
     WinActivate, ahk_class Shell_TrayWnd
     SendEvent !{Esc}
 }
-
-

@@ -8,7 +8,7 @@ It also allows you to have a custom wallpaper per desktop.
 
 ## Installation
 
-For this app to work, you first need to install "Visual C++ Redistributable for Visual Studio 2015".
+For this app to work, you first might need to install "Visual C++ Redistributable for Visual Studio 2015".
 It should be available [here](https://www.microsoft.com/en-us/download/details.aspx?id=48145).
 
 This app does not need to be installed, simply extract it into a folder in your computer.
@@ -18,6 +18,10 @@ To run this app, just run the "virtual-desktop-enhancer.exe" program.
 Alternatively you can install AutoHotkey and run the "virtual-desktop-enhancer.ahk" script file.
 
 This application only works on Windows 10 x64.
+
+## Troubleshooting
+
+If the new keyboard shortcuts do not work and the tray icon doesn't update when changing desktops, install the optional patch (it might still not work, this has to do with the version of the runtimes that you have installed).
 
 ## Usage
 

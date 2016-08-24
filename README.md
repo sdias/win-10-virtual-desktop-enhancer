@@ -17,7 +17,7 @@ To run this app, just run the "virtual-desktop-enhancer.exe" program.
 
 Alternatively you can install AutoHotkey and run the "virtual-desktop-enhancer.ahk" script file.
 
-The executable only can only run on x64 versions of Windows 10, but if you can run this app on Windows 10 x86 if you install AutoHotkey and run the script instead. 
+This application only works on Windows 10 x64.
 
 ## Usage
 

@@ -11,6 +11,8 @@ It also allows you to have a custom wallpaper per desktop.
 For this app to work, you first need to install "Visual C++ Redistributable for Visual Studio 2015".
 It should be available [here](https://www.microsoft.com/en-us/download/details.aspx?id=48145).
 
+This app does not need to be installed, simply extract it into a folder in your computer.
+
 To run this app, just run the "virtual-desktop-enhancer.exe" program.
 
 Alternatively you can install AutoHotkey and run the "virtual-desktop-enhancer.ahk" script file.
@@ -40,7 +42,7 @@ A maximum of 9 desktops are supported.
 A new tray icon will be available. It indicates the number of the current desktop (1-9).
 If you click on it the desktop management screen is displayed.
 
-The icons have white text over black background. An inverted color scheme (black text over whithe background) is also available.
+The icons have white text over black background. An inverted color scheme (black text over white background) is also available.
 
 To change between both, go into the "icons" folder and extract either the "white.zip" or "black.zip" files, replacing any existing files. You can also use custom icons, by copying them into this folder and renaming them "1.ico" through "9.ico".
 

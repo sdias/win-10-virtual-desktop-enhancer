@@ -58,6 +58,10 @@ To use images, set the path of the image, either absolute or relative (ex: "1=C:
 To use fixed colors, set the color in hexadecimal (ex: "3=ff0000" for red, "4=ff00" or "4=00ff00" for green).
 If you set the config of that desktop to empty (ex: "5=") the wallpaper won't change when you switch to that desktop.
 
+### Additional Configuration
+
+You can also set what is the default desktop using the "[General] DefaultDesktop" setting.
+
 ## Credits
 
 Thanks to Ciantic (Jari Pennanen) for his library and sample AHK script, which can be found [here](https://github.com/Ciantic/VirtualDesktopAccessor).

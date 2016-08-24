@@ -37,8 +37,10 @@ Menu, Tray, Default, &Manage Desktops
 Menu, Tray, Click, 1
 
 ReadIni("settings.ini")
-ChangeAppearance(1)
-ChangeDesktop(1)
+
+defaultDesktop := GeneralDefaultDesktop
+ChangeAppearance(defaultDesktop)
+ChangeDesktop(defaultDesktop)
 
 ; ======================================================================
 ; Keybindings

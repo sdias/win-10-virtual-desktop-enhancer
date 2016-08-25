@@ -100,7 +100,7 @@ ChangeDesktop(n) {
 ChangeBackground(n) {
     line := Wallpapers%n%
 
-    isHex := RegExMatch(line, "^([0-9A-Fa-f]{1,6})", hexMatchTotal)
+    isHex := RegExMatch(line, "^0x([0-9A-Fa-f]{1,6})", hexMatchTotal)
 
     if (isHex) {
         hexColorReversed := SubStr("00000" . hexMatchTotal1, -5)

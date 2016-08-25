@@ -55,7 +55,7 @@ To change between them, go into the "icons" folder and extract the ZIP file for 
 To configure the wallpapers, edit the "settings.ini" file.
 For each desktop, you can either set the wallpaper to be an image file or a fixed color.
 To use images, set the path of the image, either absolute or relative (ex: "1=C:\wallpapers\1.jpg", "2=./wallpapers/2.jpg").
-To use fixed colors, set the color in hexadecimal (ex: "3=ff0000" for red, "4=ff00" or "4=00ff00" for green).
+To use fixed colors, set the color in hexadecimal (ex: "3=0xff0000" for red, "4=0xff00" or "4=0x00ff00" for green).
 If you set the config of that desktop to empty (ex: "5=") the wallpaper won't change when you switch to that desktop.
 
 ### Additional Configuration

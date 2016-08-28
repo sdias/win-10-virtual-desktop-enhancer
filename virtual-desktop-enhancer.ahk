@@ -32,8 +32,11 @@ VWMess(wParam, lParam, msg, hwnd) {
 ; Auto Execute
 ; ======================================================================
 
+Menu, Tray, NoStandard
 Menu, Tray, Add, &Manage Desktops, OpenDesktopManager
 Menu, Tray, Default, &Manage Desktops
+Menu, Tray, Add, Reload Settings, Reload
+Menu, Tray, Add, Exit, Exit
 Menu, Tray, Click, 1
 
 ReadIni("settings.ini")
@@ -192,6 +195,14 @@ OnDesktopSwitch(n:=1) {
     _ChangeAppearance(n)
     _ChangeBackground(n)
     _Focus()
+}
+
+Reload() {
+	Reload
+}
+
+Exit() {
+	ExitApp
 }
 
 _GetNextDesktopNumber() {

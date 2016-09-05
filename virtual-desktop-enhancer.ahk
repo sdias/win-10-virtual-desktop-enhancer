@@ -1,8 +1,9 @@
 #SingleInstance, force
 #WinActivateForce
-; Credits to: https://github.com/Ciantic/VirtualDesktopAccessor
+; Credits to Ciantic: https://github.com/Ciantic/VirtualDesktopAccessor
 
 #Include, read-ini.ahk
+#Include, tooltip.ahk
 
 ; ======================================================================
 ; Setup
@@ -24,7 +25,7 @@ global MoveWindowToDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualD
 
 DllCall(RegisterPostMessageHookProc, Int, hwnd, Int, 0x1400 + 30)
 OnMessage(0x1400 + 30, "VWMess")
-VWMess(wParam, lParam, msg, hwnd) {
+VWMess(wParam, lParam, msg, hwnd) {	
     OnDesktopSwitch(lParam + 1)
 }
 
@@ -40,6 +41,14 @@ Menu, Tray, Add, Exit, Exit
 Menu, Tray, Click, 1
 
 ReadIni("settings.ini")
+
+TooltipsEnabled := (TooltipsEnabled != "" and TooltipsEnabled ~= "^[01]$") ? TooltipsEnabled : 1
+TooltipsLifespan := (TooltipsLifespan != "" and TooltipsLifespan ~= "^\d+$") ? TooltipsLifespan : 750
+TooltipsCentered := (TooltipsCentered != "" and TooltipsCentered ~= "^[01]$") ? TooltipsCentered : 1
+TooltipsFontSize := (TooltipsFontSize != "" and TooltipsFontSize ~= "^\d+$") ? TooltipsFontSize : 11
+TooltipsFontInBold := (TooltipsFontInBold != "" and TooltipsFontInBold ~= "^[01]$") ? (TooltipsFontInBold ? 700 : 400) : 700
+TooltipsFontColor := (TooltipsFontColor != "" and TooltipsFontColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsFontColor : "0xFFFFFF"
+TooltipsBackgroundColor := (TooltipsBackgroundColor != "" and TooltipsBackgroundColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsBackgroundColor : "0x1F1F1F"
 
 SwitchToDesktop(GeneralDefaultDesktop)
 ; Update everything again, if the default desktop matches the current one
@@ -133,6 +142,25 @@ if (!areSwitchModsValid || !areMoveModsValid || !areMoveAndSwitchModsValid || !a
     Exit
 }
 
+Hotkey, % "~WheelUp", OnTaskbarScrollUp
+Hotkey, % "~WheelDown", OnTaskbarScrollDown
+
+; ======================================================================
+; Event Handlers
+; ======================================================================
+
+OnTaskbarScrollUp() {
+	if (IsCursorHoveringTaskbar()) {
+    	OnShiftLeftPress()
+    }
+}
+
+OnTaskbarScrollDown() {
+	if (IsCursorHoveringTaskbar()) {
+    	OnShiftRightPress()
+    }
+}
+
 OnShiftNumberedPress() {
     SwitchToDesktop(substr(A_ThisHotkey, 0, 1))
 }
@@ -169,9 +197,29 @@ OnMoveAndShiftRightPress() {
     MoveAndSwitchToDesktop(_GetNextDesktopNumber())
 }
 
+OnDesktopSwitch(n:=1) {
+	global TooltipsEnabled
+	if (TooltipsEnabled) {
+    	_ShowTooltip(n)
+	}
+    _ChangeAppearance(n)
+    _ChangeBackground(n)
+    _Focus()
+}
+
 ; ======================================================================
 ; Functions
 ; ======================================================================
+
+global taskbarID=0
+
+IsCursorHoveringTaskbar() {
+	MouseGetPos,,, mouseHoveringID
+	if (!taskbarID) {
+    	WinGet, taskbarID, ID, ahk_class Shell_TrayWnd
+	}
+    return (mouseHoveringID == taskbarID)
+}
 
 SwitchToDesktop(n:=1) {
     _ChangeDesktop(n)
@@ -191,12 +239,6 @@ OpenDesktopManager() {
     Send #{Tab}
 }
 
-OnDesktopSwitch(n:=1) {
-    _ChangeAppearance(n)
-    _ChangeBackground(n)
-    _Focus()
-}
-
 Reload() {
 	Reload
 }
@@ -205,24 +247,35 @@ Exit() {
 	ExitApp
 }
 
+_GetDesktopName(n:=1) {
+    if (n == 0) {
+        n := 10
+    }
+	name := DesktopNames%n%
+	if (!name) {
+		name := "Desktop " . n
+	}
+	return name
+}
+
 _GetNextDesktopNumber() {
     i := _GetCurrentDesktopNumber()
     i := (i = _GetNumberOfDesktops() ? 1 : i + 1)
-    Return i
+    return i
 }
 
 _GetPreviousDesktopNumber() {
     i := _GetCurrentDesktopNumber()
     i := (i = 1 ? _GetNumberOfDesktops() : i - 1)
-    Return i
+    return i
 }
 
 _GetCurrentDesktopNumber() {
-    Return DllCall(GetCurrentDesktopNumberProc) + 1
+    return DllCall(GetCurrentDesktopNumberProc) + 1
 }
 
 _GetNumberOfDesktops() {
-    Return DllCall(GetDesktopCountProc)
+    return DllCall(GetDesktopCountProc)
 }
 
 _MoveCurrentWindowToDesktop(n:=1) {
@@ -265,7 +318,7 @@ _ChangeBackground(n:=1) {
 }
 
 _ChangeAppearance(n:=1) {
-    Menu, Tray, Tip, Desktop %n%
+    Menu, Tray, Tip, % _GetDesktopName(n)
     if (FileExist("./icons/" . n ".ico")) {
         Menu, Tray, Icon, icons/%n%.ico
     }
@@ -277,4 +330,26 @@ _ChangeAppearance(n:=1) {
 _Focus() {
     WinActivate, ahk_class Shell_TrayWnd
     SendEvent !{Esc}
+}
+
+_ShowTooltip(n:=1) {
+    if (n == 0) {
+        n := 10
+    }
+	global TooltipsEnabled
+	global TooltipsLifespan
+	global TooltipsCentered
+	global TooltipsFontSize
+	global TooltipsFontInBold
+	global TooltipsFontColor
+	global TooltipsBackgroundColor
+	params := {}
+	params.message := _GetDesktopName(n)
+	params.lifespan := TooltipsLifespan
+	params.position := TooltipsCentered
+	params.fontSize := TooltipsFontSize
+	params.fontWeight := TooltipsFontInBold
+	params.fontColor := TooltipsFontColor
+	params.backgroundColor := TooltipsBackgroundColor
+	Toast(params)
 }

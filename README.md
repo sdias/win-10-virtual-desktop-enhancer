@@ -60,6 +60,60 @@ Also note that any number of desktops are supported, just add a line for each ne
 999=C:\Wallpapers\End of the world.jpg
 </pre>
 
+### Desktop Names
+
+In a similar manner to wallpapers, you can also set a custom name for each desktop.
+
+<pre>
+[DesktopNames]
+1=Work
+2=Games
+3=Movies
+4=Presentations
+5=
+6=
+7=
+8=
+9=
+10=
+15=No idea
+</pre>
+
+Note that the desktop's name will be visible in the tooltip of the tray icon and also in the larger tooltip that appears momentarily when you switch desktops.
+If a desktop's name is not set, "Desktop <number>" will be displayed.
+Again, like wallpapers, any number of desktops are supported by this feature.
+
+### Tooltips
+
+If you enable tooltips, every time you switch desktops a tooltip will appear letting you know the name of the desktop you switched to.
+
+You can customize the appearance of this tooltip:
+
+| Setting         | Description                                                                               | Valid Values                                   |
+| --------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| Enabled         | If tooltips should be shown.                                                              | 1 (Yes), 0 (No).                               |
+| Centered        | If the tooltips should appear at the center of the screen, or in the bottom right corner. | 1 (center), 0 (corner).                        |
+| FontSize        | The size of the font.                                                                     | Any reasonable number.                         |
+| FontColor       | The color of the font.                                                                    | Any hexadecimal number (from 0x0 to 0xFFFFFF). |
+| FontInBold      | If the font should be in bold.                                                            | 1 (Yes), 0 (No).                               |
+| BackgroundColor | The color of the background.                                                              | Any hexadecimal number (from 0x0 to 0xFFFFFF). |
+| Lifespan        | The time in milliseconds for which each tooltip will be displayed.                        | Any reasonable number.                         |
+
+As an example, you have the default configuration:
+
+<pre>
+[Tooltips]
+Enabled=1
+Centered=1
+FontSize=11
+FontColor=0xFFFFFF
+FontInBold=1
+BackgroundColor=0x1F1F1F
+Lifespan=750
+</pre>
+
+It draws tooltips at the center of the screen, in a white, bold and small font, with a dark background, and they are displayed for 750 milliseconds.
+
 ### Keyboard Shortcuts
 
 There are three functions: switching to another desktop, moving the current window to another desktop, and moving the current window to another desktop and then switch to that desktop. 
@@ -141,6 +195,8 @@ You can also set what is the default desktop using the "[General] DefaultDesktop
 ## Credits
 
 Thanks to Ciantic (Jari Pennanen) for his library and sample AHK script, which can be found [here](https://github.com/Ciantic/VirtualDesktopAccessor).
+
+Thanks to engunneer for his AHK library, which can be found [here](http://www.autohotkey.com/board/topic/21510-toaster-popups/#entry140824).
 
 Thanks to the creator of the ReadINI AHK library, found [here](https://autohotkey.com/board/topic/33506-read-ini-file-in-one-go/).
 

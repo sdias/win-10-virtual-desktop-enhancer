@@ -5,7 +5,9 @@ This application enhances the Windows 10 virtual desktops feature. It makes avai
 
 - Extra customizable keyboard shortcuts to switch or move a window to a different desktop.
 - Custom wallpaper per virtual desktop (either a picture or a solid color).
-- Current desktop indicator.
+- Current desktop indicator on the tray area.
+- Custom desktop names
+- Tooltips showing the desktop name when switching desktops
 
 Go to the ["Releases" page to download](https://github.com/sdias/win-10-virtual-desktop-enhancer/releases).
 
@@ -114,7 +116,7 @@ Lifespan=750
 
 It draws tooltips at the center of the screen, in a white, bold and small font, with a dark background, and they are displayed for 750 milliseconds.
 
-### Keyboard Shortcuts
+### Keyboard and Mouse Shortcuts
 
 There are three functions: switching to another desktop, moving the current window to another desktop, and moving the current window to another desktop and then switch to that desktop. 
 
@@ -150,6 +152,7 @@ The following shortcuts are available:
 | Move the current window to next/previous desktop and switch to it | Left Alt + Shift + (Left/Right Arrow)        |
 | Open Desktop Manager                                              | Left Alt + (key under Esc)                   |
 
+Also, if enabled, you can switch desktops by scrolling over the taskbar.
 
 #### Behavior with custom config
 
@@ -190,7 +193,8 @@ To create custom packs, simply create one icon per desktop and name them appropr
 
 ### Additional Configuration
 
-You can also set what is the default desktop using the "[General] DefaultDesktop" setting.
+You can set what is the default desktop using the "[General] DefaultDesktop" setting.
+You can set if you want to be able to switch desktops by scrolling over the taskbar using the "[General] TaskbarScrollSwitching" setting (1 for yes, 0 for no).
 
 ## Credits
 

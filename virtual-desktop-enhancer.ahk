@@ -142,8 +142,11 @@ if (!areSwitchModsValid || !areMoveModsValid || !areMoveAndSwitchModsValid || !a
     Exit
 }
 
-Hotkey, % "~WheelUp", OnTaskbarScrollUp
-Hotkey, % "~WheelDown", OnTaskbarScrollDown
+if (GeneralTaskbarScrollSwitching) {	
+	Hotkey, % "~WheelUp", OnTaskbarScrollUp
+	Hotkey, % "~WheelDown", OnTaskbarScrollDown
+}
+
 
 ; ======================================================================
 ; Event Handlers

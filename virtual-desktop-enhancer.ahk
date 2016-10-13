@@ -1,5 +1,7 @@
 #SingleInstance, force
 #WinActivateForce
+#HotkeyInterval 20
+#MaxHotkeysPerInterval 20000
 ; Credits to Ciantic: https://github.com/Ciantic/VirtualDesktopAccessor
 
 #Include, read-ini.ahk

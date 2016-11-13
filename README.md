@@ -5,7 +5,7 @@ This application enhances the Windows 10 virtual desktops feature. It makes avai
 
 - Extra customizable keyboard shortcuts to switch or move a window to a different desktop.
 - Custom wallpaper per virtual desktop (either a picture or a solid color).
-- Current desktop indicator on the tray area.
+- Current desktop indicator in the tray area.
 - Custom desktop names
 - Tooltips showing the desktop name when switching desktops
 

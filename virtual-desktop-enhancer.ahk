@@ -27,7 +27,7 @@ global MoveWindowToDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualD
 
 DllCall(RegisterPostMessageHookProc, Int, hwnd, Int, 0x1400 + 30)
 OnMessage(0x1400 + 30, "VWMess")
-VWMess(wParam, lParam, msg, hwnd) {	
+VWMess(wParam, lParam, msg, hwnd) {
     OnDesktopSwitch(lParam + 1)
 }
 
@@ -44,13 +44,13 @@ Menu, Tray, Click, 1
 
 ReadIni("settings.ini")
 
-TooltipsEnabled := (TooltipsEnabled != "" and TooltipsEnabled ~= "^[01]$") ? TooltipsEnabled : 1
-TooltipsLifespan := (TooltipsLifespan != "" and TooltipsLifespan ~= "^\d+$") ? TooltipsLifespan : 750
-TooltipsCentered := (TooltipsCentered != "" and TooltipsCentered ~= "^[01]$") ? TooltipsCentered : 1
-TooltipsFontSize := (TooltipsFontSize != "" and TooltipsFontSize ~= "^\d+$") ? TooltipsFontSize : 11
-TooltipsFontInBold := (TooltipsFontInBold != "" and TooltipsFontInBold ~= "^[01]$") ? (TooltipsFontInBold ? 700 : 400) : 700
-TooltipsFontColor := (TooltipsFontColor != "" and TooltipsFontColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsFontColor : "0xFFFFFF"
-TooltipsBackgroundColor := (TooltipsBackgroundColor != "" and TooltipsBackgroundColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsBackgroundColor : "0x1F1F1F"
+global TooltipsAreEnabled := (TooltipsAreEnabled != "" and TooltipsAreEnabled ~= "^[01]$") ? TooltipsAreEnabled : 1
+global TooltipsLifespan := (TooltipsLifespan != "" and TooltipsLifespan ~= "^\d+$") ? TooltipsLifespan : 750
+global TooltipsCentered := (TooltipsCentered != "" and TooltipsCentered ~= "^[01]$") ? TooltipsCentered : 1
+global TooltipsFontSize := (TooltipsFontSize != "" and TooltipsFontSize ~= "^\d+$") ? TooltipsFontSize : 11
+global TooltipsFontInBold := (TooltipsFontInBold != "" and TooltipsFontInBold ~= "^[01]$") ? (TooltipsFontInBold ? 700 : 400) : 700
+global TooltipsFontColor := (TooltipsFontColor != "" and TooltipsFontColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsFontColor : "0xFFFFFF"
+global TooltipsBackgroundColor := (TooltipsBackgroundColor != "" and TooltipsBackgroundColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsBackgroundColor : "0x1F1F1F"
 
 SwitchToDesktop(GeneralDefaultDesktop)
 ; Update everything again, if the default desktop matches the current one
@@ -67,6 +67,7 @@ moveModifiers := KeyboardShortcutsMove
 moveAndSwitchModifiers := KeyboardShortcutsMoveAndSwitch
 previousKey := KeyboardShortcutsPrevious
 nextKey := KeyboardShortcutsNext
+plusTenModifiers := KeyboardShortcutsPlusTen
 
 arrayS := Object()
 arrayR := Object()
@@ -82,6 +83,7 @@ for index in arrayS {
     switchModifiers := RegExReplace(switchModifiers, arrayS[index], arrayR[index])
     moveModifiers := RegExReplace(moveModifiers, arrayS[index], arrayR[index])
     moveAndSwitchModifiers := RegExReplace(moveAndSwitchModifiers, arrayS[index], arrayR[index])
+    plusTenModifiers := RegExReplace(plusTenModifiers, arrayS[index], arrayR[index])
 }
 
 ; Setup key bindings dynamically
@@ -91,6 +93,7 @@ areSwitchModsValid := (switchModifiers <> "")
 areMoveModsValid := (moveModifiers <> "")
 areMoveAndSwitchModsValid := (moveAndSwitchModifiers <> "")
 arePrevAndNextKeysValid := (previousKey <> "" && nextKey <> "")
+arePlusTenModsValid := (plusTenModifiers <> "")
 
 i := 0
 while (i < 10) {
@@ -98,16 +101,31 @@ while (i < 10) {
         Hotkey, % (switchModifiers . i), OnShiftNumberedPress, UseErrorLevel
         areSwitchModsValid := (ErrorLevel = 0)
         ErrorLevel := 0
+        if (arePlusTenModsValid) {
+            Hotkey, % (switchModifiers . plusTenModifiers . i), OnShiftNumberedPressNextTen, UseErrorLevel
+            arePlusTenModsValid := (ErrorLevel = 0)
+            ErrorLevel := 0
+        }
     }
     if (areMoveModsValid) {
         Hotkey, % (moveModifiers . i), OnMoveNumberedPress, UseErrorLevel
         areMoveModsValid := (ErrorLevel = 0)
         ErrorLevel := 0
+        if (arePlusTenModsValid) {
+            Hotkey, % (moveModifiers . plusTenModifiers . i), OnMoveNumberedPressNextTen, UseErrorLevel
+            arePlusTenModsValid := (ErrorLevel = 0)
+            ErrorLevel := 0
+        }
     }
     if (areMoveAndSwitchModsValid) {
         Hotkey, % (moveAndSwitchModifiers . i), OnMoveAndShiftNumberedPress, UseErrorLevel
         areMoveAndSwitchModsValid := (ErrorLevel = 0)
         ErrorLevel := 0
+        if (arePlusTenModsValid) {
+            Hotkey, % (moveAndSwitchModifiers . plusTenModifiers . i), OnMoveAndShiftNumberedPressNextTen, UseErrorLevel
+            arePlusTenModsValid := (ErrorLevel = 0)
+            ErrorLevel := 0
+        }
     }
     i := i + 1
 }
@@ -144,9 +162,9 @@ if (!areSwitchModsValid || !areMoveModsValid || !areMoveAndSwitchModsValid || !a
     Exit
 }
 
-if (GeneralTaskbarScrollSwitching) {	
-	Hotkey, % "~WheelUp", OnTaskbarScrollUp
-	Hotkey, % "~WheelDown", OnTaskbarScrollDown
+if (GeneralTaskbarScrollSwitching) {
+    Hotkey, % "~WheelUp", OnTaskbarScrollUp
+    Hotkey, % "~WheelDown", OnTaskbarScrollDown
 }
 
 
@@ -154,28 +172,28 @@ if (GeneralTaskbarScrollSwitching) {
 ; Event Handlers
 ; ======================================================================
 
-OnTaskbarScrollUp() {
-	if (IsCursorHoveringTaskbar()) {
-    	OnShiftLeftPress()
-    }
-}
-
-OnTaskbarScrollDown() {
-	if (IsCursorHoveringTaskbar()) {
-    	OnShiftRightPress()
-    }
-}
-
 OnShiftNumberedPress() {
     SwitchToDesktop(substr(A_ThisHotkey, 0, 1))
+}
+
+OnShiftNumberedPressNextTen() {
+    SwitchToDesktop(1 . substr(A_ThisHotkey, 0, 1))
 }
 
 OnMoveNumberedPress() {
     MoveToDesktop(substr(A_ThisHotkey, 0, 1))
 }
 
+OnMoveNumberedPressNextTen() {
+    MoveToDesktop(1 . substr(A_ThisHotkey, 0, 1))
+}
+
 OnMoveAndShiftNumberedPress() {
     MoveAndSwitchToDesktop(substr(A_ThisHotkey, 0, 1))
+}
+
+OnMoveAndShiftNumberedPressNextTen() {
+    MoveAndSwitchToDesktop(1 . substr(A_ThisHotkey, 0, 1))
 }
 
 OnShiftLeftPress() {
@@ -202,14 +220,25 @@ OnMoveAndShiftRightPress() {
     MoveAndSwitchToDesktop(_GetNextDesktopNumber())
 }
 
+OnTaskbarScrollUp() {
+    if (IsCursorHoveringTaskbar()) {
+        OnShiftLeftPress()
+    }
+}
+
+OnTaskbarScrollDown() {
+    if (IsCursorHoveringTaskbar()) {
+        OnShiftRightPress()
+    }
+}
+
 OnDesktopSwitch(n:=1) {
-	global TooltipsEnabled
-	if (TooltipsEnabled) {
-    	_ShowTooltip(n)
-	}
+    if (TooltipsAreEnabled) {
+        _ShowTooltip(n)
+    }
     _ChangeAppearance(n)
     _ChangeBackground(n)
-    _Focus()
+    _FocusIfRequested()
 }
 
 ; ======================================================================
@@ -219,14 +248,17 @@ OnDesktopSwitch(n:=1) {
 global taskbarID=0
 
 IsCursorHoveringTaskbar() {
-	MouseGetPos,,, mouseHoveringID
-	if (!taskbarID) {
-    	WinGet, taskbarID, ID, ahk_class Shell_TrayWnd
-	}
+    MouseGetPos,,, mouseHoveringID
+    if (!taskbarID) {
+        WinGet, taskbarID, ID, ahk_class Shell_TrayWnd
+    }
     return (mouseHoveringID == taskbarID)
 }
 
+global doFocusAfterNextSwitch=0
+
 SwitchToDesktop(n:=1) {
+    doFocusAfterNextSwitch=1
     _ChangeDesktop(n)
 }
 
@@ -236,6 +268,7 @@ MoveToDesktop(n:=1) {
 }
 
 MoveAndSwitchToDesktop(n:=1) {
+    doFocusAfterNextSwitch=1
     _MoveCurrentWindowToDesktop(n)
     _ChangeDesktop(n)
 }
@@ -245,22 +278,22 @@ OpenDesktopManager() {
 }
 
 Reload() {
-	Reload
+    Reload
 }
 
 Exit() {
-	ExitApp
+    ExitApp
 }
 
 _GetDesktopName(n:=1) {
     if (n == 0) {
         n := 10
     }
-	name := DesktopNames%n%
-	if (!name) {
-		name := "Desktop " . n
-	}
-	return name
+    name := DesktopNames%n%
+    if (!name) {
+        name := "Desktop " . n
+    }
+    return name
 }
 
 _GetNextDesktopNumber() {
@@ -332,6 +365,13 @@ _ChangeAppearance(n:=1) {
     }
 }
 
+_FocusIfRequested() {
+    if (doFocusAfterNextSwitch) {
+        _Focus()
+        doFocusAfterNextSwitch=0
+    }
+}
+
 _Focus() {
     WinActivate, ahk_class Shell_TrayWnd
     SendEvent !{Esc}
@@ -341,20 +381,13 @@ _ShowTooltip(n:=1) {
     if (n == 0) {
         n := 10
     }
-	global TooltipsEnabled
-	global TooltipsLifespan
-	global TooltipsCentered
-	global TooltipsFontSize
-	global TooltipsFontInBold
-	global TooltipsFontColor
-	global TooltipsBackgroundColor
-	params := {}
-	params.message := _GetDesktopName(n)
-	params.lifespan := TooltipsLifespan
-	params.position := TooltipsCentered
-	params.fontSize := TooltipsFontSize
-	params.fontWeight := TooltipsFontInBold
-	params.fontColor := TooltipsFontColor
-	params.backgroundColor := TooltipsBackgroundColor
-	Toast(params)
+    params := {}
+    params.message := _GetDesktopName(n)
+    params.lifespan := TooltipsLifespan
+    params.position := TooltipsCentered
+    params.fontSize := TooltipsFontSize
+    params.fontWeight := TooltipsFontInBold
+    params.fontColor := TooltipsFontColor
+    params.backgroundColor := TooltipsBackgroundColor
+    Toast(params)
 }

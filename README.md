@@ -120,7 +120,9 @@ It draws tooltips at the center of the screen, in a white, bold and small font, 
 
 There are three functions: switching to another desktop, moving the current window to another desktop, and moving the current window to another desktop and then switch to that desktop. 
 
-For each function you can set a modifier (a combination of one or more keys) that when pressed at the same time as the number keys (0-9) or the previous and next keys, will execute that function. The keys that are available are: "Ctrl", "Shift", Alt" and "Win". You can also set it to only use the version of the key on one side of the keyboard, by adding "L" or "R" to the beginning, like for example "LCtrl" for left control and "RWin" for right windows key. 
+For each function you can set modifiers (a combination of one or more keys) that when pressed at the same time as the number keys (0-9) or the previous and next keys, will execute that function. The keys that are available are: "Ctrl", "Shift", Alt" and "Win". You can also set it to only use the version of the key on one side of the keyboard, by adding "L" or "R" to the beginning, like for example "LCtrl" for left control and "RWin" for right windows key.
+
+You can also set an extra modifier which makes these actions affect desktops 11 to 20 instead, when using the modifiers above and the number keys. You should specify it as you would for the modifiers above.
 
 The previous and next keys can also be customized. They default to "Left" and "Right", for the left and right arrows, respectively, [but can be set to any value in this page (except modifiers)](https://www.autohotkey.com/docs/KeyList.htm).
 
@@ -138,19 +140,23 @@ Move=LAlt, Shift, Ctrl
 MoveAndSwitch=LAlt, Shift
 Previous=Left
 Next=Right
+PlusTen=
 </pre>
 
 The following shortcuts are available:
 
-| Description                                                       | Keyboard Shortcut                            |
-| ----------------------------------------------------------------- | -------------------------------------------- |
-| Switch to desktop by number                                       | Left Alt + (0-9)                             |
-| Switch to next/previous desktop                                   | Left Alt + (Left/Right Arrow)                |
-| Move the current window to desktop by number                      | Left Alt + Shift + Ctrl + (0-9)              |
-| Move the current window to next/previous desktop                  | Left Alt + Shift + Ctrl + (Left/Right Arrow) |
-| Move the current window to desktop by number and switch to it     | Left Alt + Shift + (0-9)                     |
-| Move the current window to next/previous desktop and switch to it | Left Alt + Shift + (Left/Right Arrow)        |
-| Open Desktop Manager                                              | Left Alt + (key under Esc)                   |
+| Description                                                                    | Keyboard Shortcut                            |
+| ------------------------------------------------------------------------------ | -------------------------------------------- |
+| Switch to desktop by number                                                    | Left Alt + (0-9)                             |
+| Switch to next/previous desktop                                                | Left Alt + (Left/Right Arrow)                |
+| Move the current window to desktop by number                                   | Left Alt + Shift + Ctrl + (0-9)              |
+| Move the current window to next/previous desktop                               | Left Alt + Shift + Ctrl + (Left/Right Arrow) |
+| Move the current window to desktop by number and switch to it                  | Left Alt + Shift + (0-9)                     |
+| Move the current window to next/previous desktop and switch to it              | Left Alt + Shift + (Left/Right Arrow)        |
+| Open Desktop Manager                                                           | Left Alt + (key under Esc)                   |
+| Switch to desktop by number (desktops 11-20)                                   | Disabled                                     |
+| Move the current window to desktop by number (desktops 11-20)                  | Disabled                                     |
+| Move the current window to desktop by number and switch to it (desktops 11-20) | Disabled                                     |
 
 Also, if enabled, you can switch desktops by scrolling over the taskbar.
 
@@ -164,19 +170,23 @@ Move=
 MoveAndSwitch=LWin, Alt
 Previous=PgUp
 Next=PgDn
+PlusTen=LShift
 </pre>
 
 The following shortcuts are available:
 
-| Description                                                       | Keyboard Shortcut                    |
-| ----------------------------------------------------------------- | ------------------------------------ |
-| Switch to desktop by number                                       | Left Win + (0-9)                     |
-| Switch to next/previous desktop                                   | Left Win + (Page Up/Page Down)       |
-| Move the current window to desktop by number                      | Disabled                             |
-| Move the current window to next/previous desktop                  | Disabled                             |
-| Move the current window to desktop by number and switch to it     | Left Win + Alt + (0-9)               |
-| Move the current window to next/previous desktop and switch to it | Left Win + Alt + (Page Up/Page Down) |
-| Open Desktop Manager                                              | Left Win + (key under Esc)           |
+| Description                                                                    | Keyboard Shortcut                    |
+| ------------------------------------------------------------------------------ | ------------------------------------ |
+| Switch to desktop by number                                                    | Left Win + (0-9)                     |
+| Switch to next/previous desktop                                                | Left Win + (Page Up/Page Down)       |
+| Move the current window to desktop by number                                   | Disabled                             |
+| Move the current window to next/previous desktop                               | Disabled                             |
+| Move the current window to desktop by number and switch to it                  | Left Win + Alt + (0-9)               |
+| Move the current window to next/previous desktop and switch to it              | Left Win + Alt + (Page Up/Page Down) |
+| Open Desktop Manager                                                           | Left Win + (key under Esc)           |
+| Switch to desktop by number (desktops 11-20)                                   | Left Win + Left Shift + (0-9)        |
+| Move the current window to desktop by number (desktops 11-20)                  | Disabled                             |
+| Move the current window to desktop by number and switch to it (desktops 11-20) | Left Win + Alt + Left Shift + (0-9)  |
 
 ### Tray Icon
 
@@ -208,4 +218,4 @@ Thanks to the artists that created the packed wallpapers, whom I lost track of. 
 
 Thanks to rob3110 on reddit for the extra white icon theme.
 
-Thanks to several people on reddit.com/r/windows10 for their suggestions.
+Thanks to several people on reddit.com/r/windows10 and in the project's github page for their suggestions.

@@ -44,7 +44,7 @@ Menu, Tray, Click, 1
 
 ReadIni("settings.ini")
 
-global TooltipsAreEnabled := (TooltipsAreEnabled != "" and TooltipsAreEnabled ~= "^[01]$") ? TooltipsAreEnabled : 1
+global TooltipsEnabled := (TooltipsEnabled != "" and TooltipsEnabled ~= "^[01]$") ? TooltipsEnabled : 1
 global TooltipsLifespan := (TooltipsLifespan != "" and TooltipsLifespan ~= "^\d+$") ? TooltipsLifespan : 750
 global TooltipsCentered := (TooltipsCentered != "" and TooltipsCentered ~= "^[01]$") ? TooltipsCentered : 1
 global TooltipsFontSize := (TooltipsFontSize != "" and TooltipsFontSize ~= "^\d+$") ? TooltipsFontSize : 11
@@ -233,7 +233,7 @@ OnTaskbarScrollDown() {
 }
 
 OnDesktopSwitch(n:=1) {
-    if (TooltipsAreEnabled) {
+    if (TooltipsEnabled) {
         _ShowTooltip(n)
     }
     _ChangeAppearance(n)

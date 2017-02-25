@@ -8,7 +8,7 @@
 #Include, %A_ScriptDir%\libraries\tooltip.ahk
 
 ; ======================================================================
-; Setup
+; Set Up Library Hooks
 ; ======================================================================
 
 DetectHiddenWindows, On
@@ -57,37 +57,34 @@ global TooltipsFontSize := (TooltipsFontSize != "" and TooltipsFontSize ~= "^\d+
 global TooltipsFontInBold := (TooltipsFontInBold != "" and TooltipsFontInBold ~= "^[01]$") ? (TooltipsFontInBold ? 700 : 400) : 700
 global TooltipsFontColor := (TooltipsFontColor != "" and TooltipsFontColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsFontColor : "0xFFFFFF"
 global TooltipsBackgroundColor := (TooltipsBackgroundColor != "" and TooltipsBackgroundColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsBackgroundColor : "0x1F1F1F"
+global GeneralUseNativePrevNextDesktopSwitchingIfConflicting := (GeneralUseNativePrevNextDesktopSwitchingIfConflicting ~= "^[01]$" && GeneralUseNativePrevNextDesktopSwitchingIfConflicting == "1" ? true : false)
 
 SwitchToDesktop(GeneralDefaultDesktop)
 ; Update everything again, if the default desktop matches the current one
 OnDesktopSwitch(GeneralDefaultDesktop)
 
 ; ======================================================================
-; Key Bindings
+; Set Up Key Bindings
 ; ======================================================================
 
-; Format and translate up the modifier keys strings
+; Translate the modifier keys strings
 
-switchModifiers         := KeyboardShortcutsModifiersSwitchDesktop
-moveModifiers           := KeyboardShortcutsModifiersMoveWindowToDesktop
-moveAndSwitchModifiers  := KeyboardShortcutsModifiersMoveWindowAndSwitchToDesktop
-plusTenModifiers        := KeyboardShortcutsModifiersNextTenDesktops
-previousKey             := KeyboardShortcutsIdentifiersPreviousDesktop
-nextKey                 := KeyboardShortcutsIdentifiersNextDesktop
+hkModifiersSwitch          := KeyboardShortcutsModifiersSwitchDesktop
+hkModifiersMove            := KeyboardShortcutsModifiersMoveWindowToDesktop
+hkModifiersMoveAndSwitch   := KeyboardShortcutsModifiersMoveWindowAndSwitchToDesktop
+hkModifiersPlusTen         := KeyboardShortcutsModifiersNextTenDesktops
+hkIdentifierPrevious       := KeyboardShortcutsIdentifiersPreviousDesktop
+hkIdentifierNext           := KeyboardShortcutsIdentifiersNextDesktop
+hkComboPinWin              := KeyboardShortcutsCombinationsPinWindow
+hkComboUnpinWin            := KeyboardShortcutsCombinationsUnpinWindow
+hkComboTogglePinWin        := KeyboardShortcutsCombinationsTogglePinWindow
+hkComboPinApp              := KeyboardShortcutsCombinationsPinApp
+hkComboUnpinApp            := KeyboardShortcutsCombinationsUnpinApp
+hkComboTogglePinApp        := KeyboardShortcutsCombinationsTogglePinApp
+hkComboOpenDesktopManager  := KeyboardShortcutsCombinationsOpenDesktopManager
 
-windowModifiers := KeyboardShortcutsWindowActions
-pinWinKey := KeyboardShortcutsPinWindow
-unpinWinKey := KeyboardShortcutsUnpinWindow
-togglePinWinKey := KeyboardShortcutsTogglePinWindow
-
-appModifiers := KeyboardShortcutsAppActions
-pinAppKey := KeyboardShortcutsPinApp
-unpinAppKey := KeyboardShortcutsUnpinApp
-togglePinAppKey := KeyboardShortcutsTogglePinApp
-
-arrayS := Object()
-arrayR := Object()
-arrayS.Insert(", ?"),                   arrayR.Insert("")
+arrayS := Object(),                     arrayR := Object()
+arrayS.Insert("\s*|,"),                 arrayR.Insert("")
 arrayS.Insert("L(Ctrl|Shift|Alt|Win)"), arrayR.Insert("<$1")
 arrayS.Insert("R(Ctrl|Shift|Alt|Win)"), arrayR.Insert(">$1")
 arrayS.Insert("Ctrl"),                  arrayR.Insert("^")
@@ -96,125 +93,80 @@ arrayS.Insert("Alt"),                   arrayR.Insert("!")
 arrayS.Insert("Win"),                   arrayR.Insert("#")
 
 for index in arrayS {
-    switchModifiers := RegExReplace(switchModifiers, arrayS[index], arrayR[index])
-    moveModifiers := RegExReplace(moveModifiers, arrayS[index], arrayR[index])
-    moveAndSwitchModifiers := RegExReplace(moveAndSwitchModifiers, arrayS[index], arrayR[index])
-    plusTenModifiers := RegExReplace(plusTenModifiers, arrayS[index], arrayR[index])
-    windowModifiers := RegExReplace(windowModifiers, arrayS[index], arrayR[index])
-    appModifiers := RegExReplace(appModifiers, arrayS[index], arrayR[index])
+    hkModifiersSwitch         := RegExReplace(hkModifiersSwitch, arrayS[index], arrayR[index])
+    hkModifiersMove           := RegExReplace(hkModifiersMove, arrayS[index], arrayR[index])
+    hkModifiersMoveAndSwitch  := RegExReplace(hkModifiersMoveAndSwitch, arrayS[index], arrayR[index])
+    hkModifiersPlusTen        := RegExReplace(hkModifiersPlusTen, arrayS[index], arrayR[index])
+    hkComboPinWin             := RegExReplace(hkComboPinWin, arrayS[index], arrayR[index])
+    hkComboUnpinWin           := RegExReplace(hkComboUnpinWin, arrayS[index], arrayR[index])
+    hkComboTogglePinWin       := RegExReplace(hkComboTogglePinWin, arrayS[index], arrayR[index])
+    hkComboPinApp             := RegExReplace(hkComboPinApp, arrayS[index], arrayR[index])
+    hkComboUnpinApp           := RegExReplace(hkComboUnpinApp, arrayS[index], arrayR[index])
+    hkComboTogglePinApp       := RegExReplace(hkComboTogglePinApp, arrayS[index], arrayR[index])
+    hkComboOpenDesktopManager := RegExReplace(hkComboOpenDesktopManager, arrayS[index], arrayR[index])
 }
 
 ; Setup key bindings dynamically
-;  If they are set incorrectly in the settings, an error will be thrown. 
+;  If they are set incorrectly in the settings, an error will be thrown.
 
-areSwitchModsValid := (switchModifiers <> "")
-areMoveModsValid := (moveModifiers <> "")
-areMoveAndSwitchModsValid := (moveAndSwitchModifiers <> "")
-arePrevAndNextKeysValid := (previousKey <> "" && nextKey <> "")
-arePlusTenModsValid := (plusTenModifiers <> "")
+setUpHotkey(hk, handler, settingPaths) {
+    Hotkey, %hk%, %handler%, UseErrorLevel
+    if (ErrorLevel <> 0) {
+        MsgBox, 16, Error, One or more keyboard shortcut settings have been defined incorrectly in the settings file: `n%settingPaths%. `n`nPlease read the README and reconfigure them.
+        Exit
+    }
+}
 
-areWindowModsValid := (windowModifiers <> "")
-arePinAndUnpinWinKeysValid := (pinWinKey <> "" && unpinWinKey <> "")
-areTogglePinWinKeysValid := (togglePinWinKey <> "")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(modifiers, identifier, handler, settingPaths) {
+    modifiers <> "" && identifier <> "" ? setUpHotkey(modifiers . identifier, handler, settingPaths) :
+}
 
-areAppModsValid := (appModifiers <> "")
-arePinAndUnpinAppKeysValid := (pinAppKey <> "" && unpinAppKey <> "")
-areTogglePinAppKeysValid := (togglePinAppKey <> "")
+setUpHotkeyWithTwoSetOfModifiersAndIdentifier(modifiersA, modifiersB, identifier, handler, settingPaths) {
+    modifiersA <> "" && modifiersB <> "" && identifier <> "" ? setUpHotkey(modifiersA . modifiersB . identifier, handler, settingPaths) :
+}
+
+setUpHotkeyWithCombo(combo, handler, settingPaths) {
+    combo <> "" ? setUpHotkey(combo, handler, settingPaths) :
+}
 
 i := 0
 while (i < 10) {
-    if (areSwitchModsValid) {
-        Hotkey, % (switchModifiers . i), OnShiftNumberedPress, UseErrorLevel
-        areSwitchModsValid := (ErrorLevel = 0)
-        ErrorLevel := 0
-        if (arePlusTenModsValid) {
-            Hotkey, % (switchModifiers . plusTenModifiers . i), OnShiftNumberedPressNextTen, UseErrorLevel
-            arePlusTenModsValid := (ErrorLevel = 0)
-            ErrorLevel := 0
-        }
-    }
-    if (areMoveModsValid) {
-        Hotkey, % (moveModifiers . i), OnMoveNumberedPress, UseErrorLevel
-        areMoveModsValid := (ErrorLevel = 0)
-        ErrorLevel := 0
-        if (arePlusTenModsValid) {
-            Hotkey, % (moveModifiers . plusTenModifiers . i), OnMoveNumberedPressNextTen, UseErrorLevel
-            arePlusTenModsValid := (ErrorLevel = 0)
-            ErrorLevel := 0
-        }
-    }
-    if (areMoveAndSwitchModsValid) {
-        Hotkey, % (moveAndSwitchModifiers . i), OnMoveAndShiftNumberedPress, UseErrorLevel
-        areMoveAndSwitchModsValid := (ErrorLevel = 0)
-        ErrorLevel := 0
-        if (arePlusTenModsValid) {
-            Hotkey, % (moveAndSwitchModifiers . plusTenModifiers . i), OnMoveAndShiftNumberedPressNextTen, UseErrorLevel
-            arePlusTenModsValid := (ErrorLevel = 0)
-            ErrorLevel := 0
-        }
-    }
+    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, i, "OnShiftNumberedPress", "[KeyboardShortcutsModifiers] SwitchDesktop")
+    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, i, "OnMoveNumberedPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop")
+    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, i, "OnMoveAndShiftNumberedPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop")
+    setUpHotkeyWithTwoSetOfModifiersAndIdentifier(hkModifiersSwitch, hkModifiersPlusTen, i, "OnShiftNumberedPressNextTen", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsModifiers] NextTenDesktops")
+    setUpHotkeyWithTwoSetOfModifiersAndIdentifier(hkModifiersMove, hkModifiersPlusTen, i, "OnMoveNumberedPressNextTen", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsModifiers] NextTenDesktops")
+    setUpHotkeyWithTwoSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkModifiersPlusTen, i, "OnMoveAndShiftNumberedPressNextTen", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsModifiers] NextTenDesktops")
     i := i + 1
 }
-if (areSwitchModsValid && arePrevAndNextKeysValid) {
-    Hotkey, % (switchModifiers . previousKey), OnShiftLeftPress, UseErrorLevel
-    Hotkey, % (switchModifiers . nextKey), OnShiftRightPress, UseErrorLevel
-    arePrevAndNextKeysValid := (ErrorLevel = 0)
-    ErrorLevel := 0
-    Hotkey, % (switchModifiers . "SC029"), OpenDesktopManager, UseErrorLevel
+
+if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierPrevious))) {
+    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierPrevious, "OnShiftLeftPress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
 }
-if (areMoveModsValid && arePrevAndNextKeysValid) {
-    Hotkey, % (moveModifiers . previousKey), OnMoveLeftPress, UseErrorLevel
-    Hotkey, % (moveModifiers . nextKey), OnMoveRightPress, UseErrorLevel
-    arePrevAndNextKeysValid := (ErrorLevel = 0)
-    ErrorLevel := 0
-}
-if (areMoveAndSwitchModsValid && arePrevAndNextKeysValid) {
-    Hotkey, % (moveAndSwitchModifiers . previousKey), OnMoveAndShiftLeftPress, UseErrorLevel
-    Hotkey, % (moveAndSwitchModifiers . nextKey), OnMoveAndShiftRightPress, UseErrorLevel
-    arePrevAndNextKeysValid := (ErrorLevel = 0)
-    ErrorLevel := 0
-}
-if (areWindowModsValid && arePinAndUnpinWinKeysValid) {
-    Hotkey, % (windowModifiers . pinWinKey), OnPinWindowPress, UseErrorLevel
-    Hotkey, % (windowModifiers . unpinWinKey), OnUnpinWindowPress, UseErrorLevel
-    arePinandUnpinWinKeysValid := (ErrorLevel = 0)
-    ErrorLevel := 0
-}
-if (areWindowModsValid && areTogglePinWinKeysValid) {
-    Hotkey, % (windowModifiers . togglePinWinKey), OnTogglePinWindowPress, UseErrorLevel
-    areTogglePinWinKeysValid := (ErrorLevel = 0)
-    ErrorLevel := 0
-}
-if (areAppModsValid && arePinAndUnpinAppKeysValid) {
-    Hotkey, % (appModifiers . pinAppKey), OnPinAppPress, UseErrorLevel
-    Hotkey, % (appModifiers . unpinAppKey), OnUnpinAppPress, UseErrorLevel
-    arePinandUnpinAppKeysValid := (ErrorLevel = 0)
-    ErrorLevel := 0
-}
-if (areWindowModsValid && areTogglePinAppKeysValid) {
-    Hotkey, % (appModifiers . togglePinAppKey), OnTogglePinAppPress, UseErrorLevel
-    areTogglePinAppKeysValid := (ErrorLevel = 0)
-    ErrorLevel := 0
+if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierNext))) {
+    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierNext, "OnShiftRightPress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
 }
 
-; Check if it failed to setup the key bindings
-;  Ignore if it failed because the modifiers just weren't defined, which disables the keyboard shortcut
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierPrevious, "OnMoveLeftPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierNext, "OnMoveRightPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
 
-areSwitchModsValid := areSwitchModsValid || (switchModifiers = "")
-areMoveModsValid := areMoveModsValid || (moveModifiers = "")
-areMoveAndSwitchModsValid := areMoveAndSwitchModsValid || (moveAndSwitchModifiers = "")
-arePrevAndNextKeysValid := arePrevAndNextKeysValid || (previousKey = "" || nextKey = "")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkIdentifierPrevious, "OnMoveAndShiftLeftPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkIdentifierNext, "OnMoveAndShiftRightPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
 
-if (!areSwitchModsValid || !areMoveModsValid || !areMoveAndSwitchModsValid || !arePrevAndNextKeysValid) {
-    MsgBox, 16, Error, The keyboard shortcuts have been defined incorrectly in the settings file. Please read the instructions again and reconfigure them.
-    Exit
-}
+setUpHotkeyWithCombo(hkComboPinWin, "OnPinWindowPress", "[KeyboardShortcutsCombinations] PinWindow")
+setUpHotkeyWithCombo(hkComboUnpinWin, "OnUnpinWindowPress", "[KeyboardShortcutsCombinations] UnpinWindow")
+setUpHotkeyWithCombo(hkComboTogglePinWin, "OnTogglePinWindowPress", "[KeyboardShortcutsCombinations] TogglePinWindow")
+
+setUpHotkeyWithCombo(hkComboPinApp, "OnPinAppPress", "[KeyboardShortcutsCombinations] PinApp")
+setUpHotkeyWithCombo(hkComboUnpinApp, "OnUnpinAppPress", "[KeyboardShortcutsCombinations] UnpinApp")
+setUpHotkeyWithCombo(hkComboTogglePinApp, "OnTogglePinAppPress", "[KeyboardShortcutsCombinations] TogglePinApp")
+
+setUpHotkeyWithCombo(hkComboOpenDesktopManager, "OpenDesktopManager", "[KeyboardShortcutsCombinations] OpenDesktopManager")
 
 if (GeneralTaskbarScrollSwitching) {
-    Hotkey, % "~WheelUp", OnTaskbarScrollUp
-    Hotkey, % "~WheelDown", OnTaskbarScrollDown
+    Hotkey, ~WheelUp, OnTaskbarScrollUp
+    Hotkey, ~WheelDown, OnTaskbarScrollDown
 }
-
 
 ; ======================================================================
 ; Event Handlers
@@ -269,13 +221,13 @@ OnMoveAndShiftRightPress() {
 }
 
 OnTaskbarScrollUp() {
-    if (IsCursorHoveringTaskbar()) {
+    if (_IsCursorHoveringTaskbar()) {
         OnShiftLeftPress()
     }
 }
 
 OnTaskbarScrollDown() {
-    if (IsCursorHoveringTaskbar()) {
+    if (_IsCursorHoveringTaskbar()) {
         OnShiftRightPress()
     }
 }
@@ -327,16 +279,6 @@ OnDesktopSwitch(n:=1) {
 ; Functions
 ; ======================================================================
 
-global taskbarID=0
-
-IsCursorHoveringTaskbar() {
-    MouseGetPos,,, mouseHoveringID
-    if (!taskbarID) {
-        WinGet, taskbarID, ID, ahk_class Shell_TrayWnd
-    }
-    return (mouseHoveringID == taskbarID)
-}
-
 global doFocusAfterNextSwitch=0
 
 SwitchToDesktop(n:=1) {
@@ -365,6 +307,20 @@ Reload() {
 
 Exit() {
     ExitApp
+}
+
+_IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierNextOrPrevious) {
+    return ((hkModifiersSwitch == "<#<^" || hkModifiersSwitch == ">#<^" || hkModifiersSwitch == "#<^" || hkModifiersSwitch == "<#>^" || hkModifiersSwitch == ">#>^" || hkModifiersSwitch == "#>^" || hkModifiersSwitch == "<#^" || hkModifiersSwitch == ">#^" || hkModifiersSwitch == "#^") && (hkIdentifierNextOrPrevious == "Left" || hkIdentifierNextOrPrevious == "Right"))
+}
+
+global taskbarID=0
+
+_IsCursorHoveringTaskbar() {
+    MouseGetPos,,, mouseHoveringID
+    if (!taskbarID) {
+        WinGet, taskbarID, ID, ahk_class Shell_TrayWnd
+    }
+    return (mouseHoveringID == taskbarID)
 }
 
 _GetCurrentWindow() {

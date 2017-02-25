@@ -4,6 +4,7 @@ Windows 10 Virtual Desktop Enhancer
 This application enhances the Windows 10 virtual desktops feature. It makes available the following new features:
 
 - Extra customizable keyboard shortcuts to switch or move a window to a different desktop.
+- Customizable keyboard shortcuts to pin a window/all windows for an app to all desktops.
 - Custom wallpaper per virtual desktop (either a picture or a solid color).
 - Current desktop indicator in the tray area.
 - Custom desktop names.
@@ -141,6 +142,14 @@ MoveAndSwitch=LAlt, Shift
 Previous=Left
 Next=Right
 PlusTen=
+WindowActions=LAlt, Shift, Ctrl
+PinWindow=
+UnpinWindow=
+ToggleWindow=Q
+AppActions=LAlt, Shift, Ctrl
+PinApp=
+UnpinApp=
+ToggleApp=A
 </pre>
 
 The following shortcuts are available:
@@ -157,6 +166,12 @@ The following shortcuts are available:
 | Switch to desktop by number (desktops 11-20)                                   | Disabled                                     |
 | Move the current window to desktop by number (desktops 11-20)                  | Disabled                                     |
 | Move the current window to desktop by number and switch to it (desktops 11-20) | Disabled                                     |
+| Pin current *window* to all desktops                                           | Disabled                                     |
+| Unpin current window from all desktops                                         | Disabled                                     |
+| Pin/unpin (toggle) current window                                              | Left Alt + Shift + Ctrl + Q                  |
+| Pin current *app* to all desktops                                              | Disabled                                     |
+| Unpin current app from all desktops                                            | Disabled                                     |
+| Pin/unpin (toggle) current app                                                 | Left Alt + Shift + Ctrl + A                  |
 
 Also, if enabled, you can switch desktops by scrolling over the taskbar.
 

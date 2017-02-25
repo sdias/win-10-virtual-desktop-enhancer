@@ -2,6 +2,8 @@
 #WinActivateForce
 #HotkeyInterval 20
 #MaxHotkeysPerInterval 20000
+#MenuMaskKey vk07
+#UseHook
 ; Credits to Ciantic: https://github.com/Ciantic/VirtualDesktopAccessor
 
 #Include, %A_ScriptDir%\libraries\read-ini.ahk
@@ -233,46 +235,70 @@ OnTaskbarScrollDown() {
 }
 
 OnPinWindowPress() {
-    _PinWindow()
+    windowID := _GetCurrentWindowID()
+    windowTitle := _GetCurrentWindowTitle()
+    _PinWindow(windowID)
+    _ShowTooltipForPinnedWindow(windowTitle)
 }
 
 OnUnpinWindowPress() {
-    _UnPinWindow()
+    windowID := _GetCurrentWindowID()
+    windowTitle := _GetCurrentWindowTitle()
+    _UnpinWindow(windowID)
+    _ShowTooltipForUnpinnedWindow(windowTitle)
 }
 
 OnTogglePinWindowPress() {
-    window := _GetCurrentWindow()
-    if (_GetIsWindowPinned(window)) {
-         _UnpinWindow(window)
-    } else {
-         _PinWindow(window)
+    windowID := _GetCurrentWindowID()
+    windowTitle := _GetCurrentWindowTitle()
+    if (_GetIsWindowPinned(windowID)) {
+        _UnpinWindow(windowID)
+        _ShowTooltipForUnpinnedWindow(windowTitle)
+    }
+    else {
+        _PinWindow(windowID)
+        _ShowTooltipForPinnedWindow(windowTitle)
     }
 }
 
 OnPinAppPress() {
+    windowID := _GetCurrentWindowID()
+    windowTitle := _GetCurrentWindowTitle()
     _PinApp()
+    _ShowTooltipForPinnedApp(windowTitle)
 }
 
 OnUnpinAppPress() {
+    windowID := _GetCurrentWindowID()
+    windowTitle := _GetCurrentWindowTitle()
     _UnpinApp()
+    _ShowTooltipForUnpinnedApp(windowTitle)
 }
 
 OnTogglePinAppPress() {
-    window := _GetCurrentWindow()
-    if (_GetIsAppPinned(window)) {
-        _UnpinApp(window)
-    } else {
-        _PinApp(window)
+    windowID := _GetCurrentWindowID()
+    windowTitle := _GetCurrentWindowTitle()
+    if (_GetIsAppPinned(windowID)) {
+        _UnpinApp(windowID)
+        _ShowTooltipForUnpinnedApp(windowTitle)
+    }
+    else {
+        _PinApp(windowID)
+        _ShowTooltipForPinnedApp(windowTitle)
     }
 }
 
 OnDesktopSwitch(n:=1) {
     if (TooltipsEnabled) {
-        _ShowTooltip(n)
+        _ShowTooltipForDesktopSwitch(n)
     }
     _ChangeAppearance(n)
     _ChangeBackground(n)
     _FocusIfRequested()
+}
+
+Noop() {
+    Hotkey, LWin UP, Off
 }
 
 ; ======================================================================
@@ -323,9 +349,18 @@ _IsCursorHoveringTaskbar() {
     return (mouseHoveringID == taskbarID)
 }
 
-_GetCurrentWindow() {
+_GetCurrentWindowID() {
     WinGet, activeHwnd, ID, A
     return activeHwnd
+}
+
+_GetCurrentWindowTitle() {
+    WinGetTitle, activeHwnd, A
+    return activeHwnd
+}
+
+_TruncateString(string:="", n:=10) {
+    return (StrLen(string) > n ? SubStr(string, 1, n-3) . "..." : string)
 }
 
 _GetDesktopName(n:=1) {
@@ -360,7 +395,7 @@ _GetNumberOfDesktops() {
 }
 
 _MoveCurrentWindowToDesktop(n:=1) {
-    activeHwnd := _GetCurrentWindow()
+    activeHwnd := _GetCurrentWindowID()
     DllCall(MoveWindowToDesktopNumberProc, UInt, activeHwnd, UInt, n-1)
 }
 
@@ -373,33 +408,33 @@ _ChangeDesktop(n:=1) {
 
 _CallWindowProc(proc, window:="") {
     if (window == "") {
-        window := _GetCurrentWindow()
+        window := _GetCurrentWindowID()
     }
     return DllCall(proc, UInt, window)
 }
 
-_PinWindow(window:="") {
-    _CallWindowProc(PinWindowProc, window)
+_PinWindow(windowID:="") {
+    _CallWindowProc(PinWindowProc, windowID)
 }
 
-_UnpinWindow(window:="") {
-    _CallWindowProc(UnpinWindowProc, window)
+_UnpinWindow(windowID:="") {
+    _CallWindowProc(UnpinWindowProc, windowID)
 }
 
-_GetIsWindowPinned(window:="") {
-    return _CallWindowProc(IsPinnedWindowProc, window)
+_GetIsWindowPinned(windowID:="") {
+    return _CallWindowProc(IsPinnedWindowProc, windowID)
 }
 
-_PinApp(window:="") {
-    _CallWindowProc(PinAppProc, window)
+_PinApp(windowID:="") {
+    _CallWindowProc(PinAppProc, windowID)
 }
 
-_UnpinApp(window:="") {
-    _CallWindowProc(UnpinAppProc, window)
+_UnpinApp(windowID:="") {
+    _CallWindowProc(UnpinAppProc, windowID)
 }
 
-_GetIsAppPinned(window:="") {
-    return _CallWindowProc(IsPinnedAppProc, window)
+_GetIsAppPinned(windowID:="") {
+    return _CallWindowProc(IsPinnedAppProc, windowID)
 }
 
 _ChangeBackground(n:=1) {
@@ -451,12 +486,9 @@ _Focus() {
     SendEvent !{Esc}
 }
 
-_ShowTooltip(n:=1) {
-    if (n == 0) {
-        n := 10
-    }
+_ShowTooltip(message:="") {
     params := {}
-    params.message := _GetDesktopName(n)
+    params.message := message
     params.lifespan := TooltipsLifespan
     params.position := TooltipsCentered
     params.fontSize := TooltipsFontSize
@@ -464,4 +496,27 @@ _ShowTooltip(n:=1) {
     params.fontColor := TooltipsFontColor
     params.backgroundColor := TooltipsBackgroundColor
     Toast(params)
+}
+
+_ShowTooltipForDesktopSwitch(n:=1) {
+    if (n == 0) {
+        n := 10
+    }
+    _ShowTooltip(_GetDesktopName(n))
+}
+
+_ShowTooltipForPinnedWindow(windowTitle) {
+    _ShowTooltip("Window """ . _TruncateString(windowTitle, 30) . """ pinned.")
+}
+
+_ShowTooltipForUnpinnedWindow(windowTitle) {
+    _ShowTooltip("Window """ . _TruncateString(windowTitle, 30) . """ unpinned.")
+}
+
+_ShowTooltipForPinnedApp(windowTitle) {
+    _ShowTooltip("App """ . _TruncateString(windowTitle, 30) . """ pinned.")
+}
+
+_ShowTooltipForUnpinnedApp(windowTitle) {
+    _ShowTooltip("App """ . _TruncateString(windowTitle, 30) . """ unpinned.")
 }

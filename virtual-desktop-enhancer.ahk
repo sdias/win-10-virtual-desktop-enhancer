@@ -68,12 +68,12 @@ OnDesktopSwitch(GeneralDefaultDesktop)
 
 ; Format and translate up the modifier keys strings
 
-switchModifiers := KeyboardShortcutsSwitch
-moveModifiers := KeyboardShortcutsMove
-moveAndSwitchModifiers := KeyboardShortcutsMoveAndSwitch
-previousKey := KeyboardShortcutsPrevious
-nextKey := KeyboardShortcutsNext
-plusTenModifiers := KeyboardShortcutsPlusTen
+switchModifiers         := KeyboardShortcutsModifiersSwitchDesktop
+moveModifiers           := KeyboardShortcutsModifiersMoveWindowToDesktop
+moveAndSwitchModifiers  := KeyboardShortcutsModifiersMoveWindowAndSwitchToDesktop
+plusTenModifiers        := KeyboardShortcutsModifiersNextTenDesktops
+previousKey             := KeyboardShortcutsIdentifiersPreviousDesktop
+nextKey                 := KeyboardShortcutsIdentifiersNextDesktop
 
 windowModifiers := KeyboardShortcutsWindowActions
 pinWinKey := KeyboardShortcutsPinWindow

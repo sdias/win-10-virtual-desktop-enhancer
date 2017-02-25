@@ -116,31 +116,51 @@ Lifespan=750
 
 It draws tooltips at the center of the screen, in a white, bold and small font, with a dark background, and they are displayed for 750 milliseconds.
 
-### Keyboard and Mouse Shortcuts
+### Keyboard Shortcuts
 
-There are three functions: switching to another desktop, moving the current window to another desktop, and moving the current window to another desktop and then switch to that desktop. 
+There are several actions available that can be bound to keyboard shortcuts. These are:
+* Switching to another desktop
+* Moving the current window to another desktop
+* Moving the current window to another desktop and then switch to that desktop
+* Affect the next 10 desktops instead, for any of the actions above
 
-For each function you can set modifiers (a combination of one or more keys) that when pressed at the same time as the number keys (0-9) or the previous and next keys, will execute that function. The keys that are available are: "Ctrl", "Shift", Alt" and "Win". You can also set it to only use the version of the key on one side of the keyboard, by adding "L" or "R" to the beginning, like for example "LCtrl" for left control and "RWin" for right windows key.
+For each of these actions, you can set modifier keys (a combination of one or more keys, out of the `Ctrl`, `Shift`, `Alt` and `Win` keys) and identifier keys (keys to identify the context of the action).
+For example: if you want to set up a keyboard shortcut to be able to switch to the next desktop, you need to set up the modifier keys for "switch to another desktop" (for example, `Ctrl + Win`), and also set up the identifier key for "next desktop" (for example, `Right Arrow`).
 
-You can also set an extra modifier which makes these actions affect desktops 11 to 20 instead, when using the modifiers above and the number keys. You should specify it as you would for the modifiers above.
+These are the available keyboard shortcut settings:
 
-The previous and next keys can also be customized. They default to "Left" and "Right", for the left and right arrows, respectively, [but can be set to any value in this page (except modifiers)](https://www.autohotkey.com/docs/KeyList.htm).
+| Section                      | Name                         | Description |
+| -                            | -                            | - |
+| KeyboardShortcutsModifiers   | SwitchDesktop                | Switch to a desktop.                        |
+| KeyboardShortcutsModifiers   | MoveWindowToDesktop          | Move the current window to another desktop. |
+| KeyboardShortcutsModifiers   | MoveWindowAndSwitchToDesktop | Move the current window to another desktop, and switch to it. |
+| KeyboardShortcutsModifiers   | NextTenDesktops              | If doing any of the actions above and targetting a specific desktop (ex: Switch to desktop no. 3) it instead targets the desktop that comes 10 desktops after that one (ex: Switch to desktop no. 13 instead of no. 3). Note that this modifier is works together with the modifiers above. |
+| KeyboardShortcutsIdentifiers | PreviousDesktop              | Do the action for the previous desktop. |
+| KeyboardShortcutsIdentifiers | NextDesktop                  | Do the action for the next desktop. |
 
-Also note that if the setting is set to empty, the feature will be disabled.
+In addition to the configurable identifier keys, the number keys above the letters on your keyboard also act as identifier keys, and each targets a specific desktop (from Desktop 1 to 10, unless the "NextTenDesktops" modifier is pressed, which will make them target Desktop 11 to 20 instead).
 
-Hopefully the following examples make this clearer.
+Each modifier keys' setting can be a combination of the `Ctrl`, `Shift`, `Alt`, `Win` keys, separated by commas. For each key, you can use the left or right variant of the keys specifically, by adding `L` or `R` before the name of the key (ex: `LCtrl`), otherwise both can be used. See below for examples.
+
+Each identifier keys' setting can be single key of your keyboard. [They can be set to any value in this page (except modifiers)](https://www.autohotkey.com/docs/KeyList.htm). See below for examples.
+
+Also note that if the setting is set to empty or not set at all, the feature will be disabled.
+
+Here are some examples with different configs:
 
 #### Behavior with default config
 
 With this config:
 <pre>
-[KeyboardShortcuts]
-Switch=LAlt
-Move=LAlt, Shift, Ctrl
-MoveAndSwitch=LAlt, Shift
-Previous=Left
-Next=Right
-PlusTen=
+[KeyboardShortcutsModifiers]
+SwitchDesktop=LAlt
+MoveWindowToDesktop=LAlt, Shift, Ctrl
+MoveWindowAndSwitchToDesktop=LAlt, Shift
+NextTenDesktops=
+
+[KeyboardShortcutsIdentifiers]
+PreviousDesktop=Left
+NextDesktop=Right
 </pre>
 
 The following shortcuts are available:
@@ -158,19 +178,19 @@ The following shortcuts are available:
 | Move the current window to desktop by number (desktops 11-20)                  | Disabled                                     |
 | Move the current window to desktop by number and switch to it (desktops 11-20) | Disabled                                     |
 
-Also, if enabled, you can switch desktops by scrolling over the taskbar.
-
 #### Behavior with custom config
 
 With this config:
 <pre>
-[KeyboardShortcuts]
-Switch=LWin
-Move=
-MoveAndSwitch=LWin, Alt
-Previous=PgUp
-Next=PgDn
-PlusTen=LShift
+[KeyboardShortcutsModifiers]
+SwitchDesktop=LWin
+MoveWindowToDesktop=
+MoveWindowAndSwitchToDesktop=LWin, Alt
+NextTenDesktops=LShift
+
+[KeyboardShortcutsIdentifiers]
+PreviousDesktop=PgUp
+NextDesktop=PgDn
 </pre>
 
 The following shortcuts are available:
@@ -187,6 +207,10 @@ The following shortcuts are available:
 | Switch to desktop by number (desktops 11-20)                                   | Left Win + Left Shift + (0-9)        |
 | Move the current window to desktop by number (desktops 11-20)                  | Disabled                             |
 | Move the current window to desktop by number and switch to it (desktops 11-20) | Left Win + Alt + Left Shift + (0-9)  |
+
+### Mouse Shortcuts
+
+You switch between desktops by scrolling over the taskbar, if that setting is enabled.
 
 ### Tray Icon
 
@@ -205,6 +229,43 @@ To create custom packs, simply create one icon per desktop and name them appropr
 
 You can set what is the default desktop using the "[General] DefaultDesktop" setting.
 You can set if you want to be able to switch desktops by scrolling over the taskbar using the "[General] TaskbarScrollSwitching" setting (1 for yes, 0 for no).
+
+### Settings Migration Guide
+
+Between version 0.9.1 and the current one, the name and location of some settings changed. The table and examples below should explain what was changed.
+
+| Old location                      | New Location                                              |
+| -                                 | -                                                         |
+| [KeyboardShortcuts] Switch        | [KeyboardShortcutsModifiers] SwitchDesktop                |
+| [KeyboardShortcuts] Move          | [KeyboardShortcutsModifiers] MoveWindowToDesktop          |
+| [KeyboardShortcuts] MoveAndSwitch | [KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop |
+| [KeyboardShortcuts] PlusTen       | [KeyboardShortcutsModifiers] NextTenDesktops              |
+| [KeyboardShortcuts] Previous      | [KeyboardShortcutsIdentifiers] PreviousDesktop            |
+| [KeyboardShortcuts] Next          | [KeyboardShortcutsIdentifiers] NextDesktop                |
+
+Example (old):
+<pre>
+[KeyboardShortcuts]
+Switch=LAlt
+Move=LAlt, Shift, Ctrl
+MoveAndSwitch=LAlt, Shift
+PlusTen=
+Previous=Left
+Next=Right
+</pre>
+
+Example (new):
+<pre>
+[KeyboardShortcutsModifiers]
+SwitchDesktop=LAlt
+MoveWindowToDesktop=LAlt, Shift, Ctrl
+MoveWindowAndSwitchToDesktop=LAlt, Shift
+NextTenDesktops=
+
+[KeyboardShortcutsIdentifiers]
+PreviousDesktop=Left
+NextDesktop=Right
+</pre>
 
 ## Credits
 

@@ -337,3 +337,5 @@ Thanks to the artists that created the packed wallpapers, whom I lost track of. 
 Thanks to rob3110 on reddit for the extra white icon theme.
 
 Thanks to several people on reddit.com/r/windows10 and in the project's github page for their suggestions.
+
+Thanks to mlabaj (Martin Labaj) for his code for the window pinning functionality.

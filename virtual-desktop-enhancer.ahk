@@ -78,12 +78,12 @@ plusTenModifiers := KeyboardShortcutsPlusTen
 windowModifiers := KeyboardShortcutsWindowActions
 pinWinKey := KeyboardShortcutsPinWindow
 unpinWinKey := KeyboardShortcutsUnpinWindow
-togglePinWinKey := KeyboardShortcutsToggleWindow
+togglePinWinKey := KeyboardShortcutsTogglePinWindow
 
 appModifiers := KeyboardShortcutsAppActions
 pinAppKey := KeyboardShortcutsPinApp
 unpinAppKey := KeyboardShortcutsUnpinApp
-togglePinAppKey := KeyboardShortcutsToggleApp
+togglePinAppKey := KeyboardShortcutsTogglePinApp
 
 arrayS := Object()
 arrayR := Object()

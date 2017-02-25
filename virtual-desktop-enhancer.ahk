@@ -24,6 +24,12 @@ global GetCurrentDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDes
 global GetDesktopCountProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "GetDesktopCount", "Ptr")
 global IsWindowOnCurrentVirtualDesktopProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsWindowOnCurrentVirtualDesktop", "Ptr")
 global MoveWindowToDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "MoveWindowToDesktopNumber", "Ptr")
+global IsPinnedWindowProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsPinnedWindow", "Ptr")
+global PinWindowProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "PinWindow", "Ptr")
+global UnPinWindowProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "UnPinWindow", "Ptr")
+global IsPinnedAppProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsPinnedApp", "Ptr")
+global PinAppProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "PinApp", "Ptr")
+global UnPinAppProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "UnPinApp", "Ptr")
 
 DllCall(RegisterPostMessageHookProc, Int, hwnd, Int, 0x1400 + 30)
 OnMessage(0x1400 + 30, "VWMess")
@@ -69,6 +75,16 @@ previousKey := KeyboardShortcutsPrevious
 nextKey := KeyboardShortcutsNext
 plusTenModifiers := KeyboardShortcutsPlusTen
 
+windowModifiers := KeyboardShortcutsWindowActions
+pinWinKey := KeyboardShortcutsPinWindow
+unpinWinKey := KeyboardShortcutsUnpinWindow
+togglePinWinKey := KeyboardShortcutsToggleWindow
+
+appModifiers := KeyboardShortcutsAppActions
+pinAppKey := KeyboardShortcutsPinApp
+unpinAppKey := KeyboardShortcutsUnpinApp
+togglePinAppKey := KeyboardShortcutsToggleApp
+
 arrayS := Object()
 arrayR := Object()
 arrayS.Insert(", ?"),                   arrayR.Insert("")
@@ -84,6 +100,8 @@ for index in arrayS {
     moveModifiers := RegExReplace(moveModifiers, arrayS[index], arrayR[index])
     moveAndSwitchModifiers := RegExReplace(moveAndSwitchModifiers, arrayS[index], arrayR[index])
     plusTenModifiers := RegExReplace(plusTenModifiers, arrayS[index], arrayR[index])
+    windowModifiers := RegExReplace(windowModifiers, arrayS[index], arrayR[index])
+    appModifiers := RegExReplace(appModifiers, arrayS[index], arrayR[index])
 }
 
 ; Setup key bindings dynamically
@@ -94,6 +112,14 @@ areMoveModsValid := (moveModifiers <> "")
 areMoveAndSwitchModsValid := (moveAndSwitchModifiers <> "")
 arePrevAndNextKeysValid := (previousKey <> "" && nextKey <> "")
 arePlusTenModsValid := (plusTenModifiers <> "")
+
+areWindowModsValid := (windowModifiers <> "")
+arePinAndUnpinWinKeysValid := (pinWinKey <> "" && unpinWinKey <> "")
+areTogglePinWinKeysValid := (togglePinWinKey <> "")
+
+areAppModsValid := (appModifiers <> "")
+arePinAndUnpinAppKeysValid := (pinAppKey <> "" && unpinAppKey <> "")
+areTogglePinAppKeysValid := (togglePinAppKey <> "")
 
 i := 0
 while (i < 10) {
@@ -146,6 +172,28 @@ if (areMoveAndSwitchModsValid && arePrevAndNextKeysValid) {
     Hotkey, % (moveAndSwitchModifiers . previousKey), OnMoveAndShiftLeftPress, UseErrorLevel
     Hotkey, % (moveAndSwitchModifiers . nextKey), OnMoveAndShiftRightPress, UseErrorLevel
     arePrevAndNextKeysValid := (ErrorLevel = 0)
+    ErrorLevel := 0
+}
+if (areWindowModsValid && arePinAndUnpinWinKeysValid) {
+    Hotkey, % (windowModifiers . pinWinKey), OnPinWindowPress, UseErrorLevel
+    Hotkey, % (windowModifiers . unpinWinKey), OnUnpinWindowPress, UseErrorLevel
+    arePinandUnpinWinKeysValid := (ErrorLevel = 0)
+    ErrorLevel := 0
+}
+if (areWindowModsValid && areTogglePinWinKeysValid) {
+    Hotkey, % (windowModifiers . togglePinWinKey), OnTogglePinWindowPress, UseErrorLevel
+    areTogglePinWinKeysValid := (ErrorLevel = 0)
+    ErrorLevel := 0
+}
+if (areAppModsValid && arePinAndUnpinAppKeysValid) {
+    Hotkey, % (appModifiers . pinAppKey), OnPinAppPress, UseErrorLevel
+    Hotkey, % (appModifiers . unpinAppKey), OnUnpinAppPress, UseErrorLevel
+    arePinandUnpinAppKeysValid := (ErrorLevel = 0)
+    ErrorLevel := 0
+}
+if (areWindowModsValid && areTogglePinAppKeysValid) {
+    Hotkey, % (appModifiers . togglePinAppKey), OnTogglePinAppPress, UseErrorLevel
+    areTogglePinAppKeysValid := (ErrorLevel = 0)
     ErrorLevel := 0
 }
 
@@ -232,6 +280,40 @@ OnTaskbarScrollDown() {
     }
 }
 
+OnPinWindowPress() {
+    _PinWindow()
+}
+
+OnUnpinWindowPress() {
+    _UnPinWindow()
+}
+
+OnTogglePinWindowPress() {
+    window := _GetCurrentWindow()
+    if (_GetIsWindowPinned(window)) {
+         _UnpinWindow(window)
+    } else {
+         _PinWindow(window)
+    }
+}
+
+OnPinAppPress() {
+    _PinApp()
+}
+
+OnUnpinAppPress() {
+    _UnpinApp()
+}
+
+OnTogglePinAppPress() {
+    window := _GetCurrentWindow()
+    if (_GetIsAppPinned(window)) {
+        _UnpinApp(window)
+    } else {
+        _PinApp(window)
+    }
+}
+
 OnDesktopSwitch(n:=1) {
     if (TooltipsEnabled) {
         _ShowTooltip(n)
@@ -285,6 +367,11 @@ Exit() {
     ExitApp
 }
 
+_GetCurrentWindow() {
+    WinGet, activeHwnd, ID, A
+    return activeHwnd
+}
+
 _GetDesktopName(n:=1) {
     if (n == 0) {
         n := 10
@@ -317,7 +404,7 @@ _GetNumberOfDesktops() {
 }
 
 _MoveCurrentWindowToDesktop(n:=1) {
-    WinGet, activeHwnd, ID, A
+    activeHwnd := _GetCurrentWindow()
     DllCall(MoveWindowToDesktopNumberProc, UInt, activeHwnd, UInt, n-1)
 }
 
@@ -326,6 +413,37 @@ _ChangeDesktop(n:=1) {
         n := 10
     }
     DllCall(GoToDesktopNumberProc, Int, n-1)
+}
+
+_CallWindowProc(proc, window:="") {
+    if (window == "") {
+        window := _GetCurrentWindow()
+    }
+    return DllCall(proc, UInt, window)
+}
+
+_PinWindow(window:="") {
+    _CallWindowProc(PinWindowProc, window)
+}
+
+_UnpinWindow(window:="") {
+    _CallWindowProc(UnpinWindowProc, window)
+}
+
+_GetIsWindowPinned(window:="") {
+    return _CallWindowProc(IsPinnedWindowProc, window)
+}
+
+_PinApp(window:="") {
+    _CallWindowProc(PinAppProc, window)
+}
+
+_UnpinApp(window:="") {
+    _CallWindowProc(UnpinAppProc, window)
+}
+
+_GetIsAppPinned(window:="") {
+    return _CallWindowProc(IsPinnedAppProc, window)
 }
 
 _ChangeBackground(n:=1) {

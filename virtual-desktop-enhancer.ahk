@@ -4,8 +4,8 @@
 #MaxHotkeysPerInterval 20000
 ; Credits to Ciantic: https://github.com/Ciantic/VirtualDesktopAccessor
 
-#Include, read-ini.ahk
-#Include, tooltip.ahk
+#Include, %A_ScriptDir%\libraries\read-ini.ahk
+#Include, %A_ScriptDir%\libraries\tooltip.ahk
 
 ; ======================================================================
 ; Setup
@@ -15,7 +15,7 @@ DetectHiddenWindows, On
 hwnd := WinExist("ahk_pid " . DllCall("GetCurrentProcessId","Uint"))
 hwnd += 0x1000 << 32
 
-hVirtualDesktopAccessor := DllCall("LoadLibrary", "Str", ".\virtual-desktop-accessor.dll", "Ptr") 
+hVirtualDesktopAccessor := DllCall("LoadLibrary", "Str", A_ScriptDir . "\libraries\virtual-desktop-accessor.dll", "Ptr") 
 
 global GoToDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "GoToDesktopNumber", "Ptr")
 global RegisterPostMessageHookProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "RegisterPostMessageHook", "Ptr")

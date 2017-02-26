@@ -145,7 +145,7 @@ For example: if you want to set up a keyboard shortcut to be able to pin the cur
 These are the available keyboard shortcut settings:
 
 | Section                       | Name                         | Description |
-| -                             | -                            | - |
+| ---                           | ---                          | --- |
 | KeyboardShortcutsModifiers    | SwitchDesktop                | Switch to a desktop.                        |
 | KeyboardShortcutsModifiers    | MoveWindowToDesktop          | Move the current window to another desktop. |
 | KeyboardShortcutsModifiers    | MoveWindowAndSwitchToDesktop | Move the current window to another desktop, and switch to it. |
@@ -291,7 +291,7 @@ If your keyboard shortcuts configuration conflicts with the default Windows shor
 Between version 0.9.1 and the current one, the name and location of some settings changed. The table and examples below should explain what was changed.
 
 | Old location                      | New Location                                              |
-| -                                 | -                                                         |
+| ---                               | ---                                                       |
 | [KeyboardShortcuts] Switch        | [KeyboardShortcutsModifiers] SwitchDesktop                |
 | [KeyboardShortcuts] Move          | [KeyboardShortcutsModifiers] MoveWindowToDesktop          |
 | [KeyboardShortcuts] MoveAndSwitch | [KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop |

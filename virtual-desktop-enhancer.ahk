@@ -43,12 +43,16 @@ VWMess(wParam, lParam, msg, hwnd) {
 ; Auto Execute
 ; ======================================================================
 
+; Set up tray tray menu
+
 Menu, Tray, NoStandard
 Menu, Tray, Add, &Manage Desktops, OpenDesktopManager
 Menu, Tray, Default, &Manage Desktops
 Menu, Tray, Add, Reload Settings, Reload
 Menu, Tray, Add, Exit, Exit
 Menu, Tray, Click, 1
+
+; Read and groom settings
 
 ReadIni("settings.ini")
 
@@ -61,9 +65,20 @@ global TooltipsFontColor := (TooltipsFontColor != "" and TooltipsFontColor ~= "^
 global TooltipsBackgroundColor := (TooltipsBackgroundColor != "" and TooltipsBackgroundColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsBackgroundColor : "0x1F1F1F"
 global GeneralUseNativePrevNextDesktopSwitchingIfConflicting := (GeneralUseNativePrevNextDesktopSwitchingIfConflicting ~= "^[01]$" && GeneralUseNativePrevNextDesktopSwitchingIfConflicting == "1" ? true : false)
 
+; Initialize
+
+global taskbarID=0
+global previousDesktopNo=0
+global doFocusAfterNextSwitch=0
+global hasSwitchedDesktopsBefore=1
+
+initialDesktopNo := _GetCurrentDesktopNumber()
+
 SwitchToDesktop(GeneralDefaultDesktop)
-; Update everything again, if the default desktop matches the current one
-OnDesktopSwitch(GeneralDefaultDesktop)
+; Call "OnDesktopSwitch" since it wouldn't be called otherwise, if the default desktop matches the current one
+if (GeneralDefaultDesktop == initialDesktopNo) {
+    OnDesktopSwitch(GeneralDefaultDesktop)
+}
 
 ; ======================================================================
 ; Set Up Key Bindings
@@ -114,7 +129,7 @@ for index in arrayS {
 setUpHotkey(hk, handler, settingPaths) {
     Hotkey, %hk%, %handler%, UseErrorLevel
     if (ErrorLevel <> 0) {
-        MsgBox, 16, Error, One or more keyboard shortcut settings have been defined incorrectly in the settings file: `n%settingPaths%. `n`nPlease read the README and reconfigure them.
+        MsgBox, 16, Error, One or more keyboard shortcut settings have been defined incorrectly in the settings file: `n%settingPaths%. `n`nPlease read the README for instructions.
         Exit
     }
 }
@@ -302,17 +317,17 @@ OnDesktopSwitch(n:=1) {
     _ChangeAppearance(n)
     _ChangeBackground(n)
     _FocusIfRequested()
-}
 
-Noop() {
-    Hotkey, LWin UP, Off
+    if (previousDesktopNo) {
+        _RunProgramWhenSwitchingFromDesktop(previousDesktopNo)
+    }
+    _RunProgramWhenSwitchingToDesktop(n)
+    previousDesktopNo := n
 }
 
 ; ======================================================================
 ; Functions
 ; ======================================================================
-
-global doFocusAfterNextSwitch=0
 
 SwitchToDesktop(n:=1) {
     doFocusAfterNextSwitch=1
@@ -345,8 +360,6 @@ Exit() {
 _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierNextOrPrevious) {
     return ((hkModifiersSwitch == "<#<^" || hkModifiersSwitch == ">#<^" || hkModifiersSwitch == "#<^" || hkModifiersSwitch == "<#>^" || hkModifiersSwitch == ">#>^" || hkModifiersSwitch == "#>^" || hkModifiersSwitch == "<#^" || hkModifiersSwitch == ">#^" || hkModifiersSwitch == "#^") && (hkIdentifierNextOrPrevious == "Left" || hkIdentifierNextOrPrevious == "Right"))
 }
-
-global taskbarID=0
 
 _IsCursorHoveringTaskbar() {
     MouseGetPos,,, mouseHoveringID
@@ -444,11 +457,34 @@ _GetIsAppPinned(windowID:="") {
     return _CallWindowProc(IsPinnedAppProc, windowID)
 }
 
+_RunProgram(program:="", settingName:="") {
+    if (program <> "") {
+        if (FileExist(program)) {
+            Run, % program
+        }
+        else {
+            MsgBox, 16, Error, The program "%program%" is not valid. `nPlease reconfigure the "%settingName%" setting. `n`nPlease read the README for instructions.
+        }
+    }
+}
+
+_RunProgramWhenSwitchingToDesktop(n:=1) {
+    if (n == 0) {
+        n := 10
+    }
+    _RunProgram(RunProgramWhenSwitchingToDesktop%n%, "[RunProgramWhenSwitchingToDesktop] " . n)
+}
+
+_RunProgramWhenSwitchingFromDesktop(n:=1) {
+    if (n == 0) {
+        n := 10
+    }
+    _RunProgram(RunProgramWhenSwitchingFromDesktop%n%, "[RunProgramWhenSwitchingFromDesktop] " . n)
+}
+
 _ChangeBackground(n:=1) {
     line := Wallpapers%n%
-
     isHex := RegExMatch(line, "^0x([0-9A-Fa-f]{1,6})", hexMatchTotal)
-
     if (isHex) {
         hexColorReversed := SubStr("00000" . hexMatchTotal1, -5)
 

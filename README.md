@@ -285,7 +285,31 @@ The following shortcuts are available:
 
 ### Mouse Shortcuts
 
-You switch between desktops by scrolling over the taskbar, if that setting is enabled.
+You can switch between desktops by scrolling over the taskbar, if that setting is enabled.
+
+### Running Programs When Switching Desktops
+
+You can make it so a program is executed every time you enter or leave each desktop. For that you just need to set the settings under the "[RunProgramWhenSwitchingToDesktop]" and "[RunProgramWhenSwitchingFromDesktop]" sections. Please see the example below for clarification.
+
+<pre>
+[General]
+DefaultDesktop=2
+
+[RunProgramWhenSwitchingToDesktop]
+1=C:/Batch Files/Open Chrome.bat
+2=C:/Batch Files/Open Outlook.bat
+3=
+
+[RunProgramWhenSwitchingFromDesktop]
+1=C:/Batch Files/Close Chrome.bat
+2=C:/Batch Files/Close Outlook.bat
+3=
+</pre>
+
+With the configuration above, once this app starts, it will switch to desktop 2, and it will run the "Open Outlook.bat" program.
+If you then switch to the first desktop, it will run the "Close Outlook.bat" and "Open Chrome.bat" programs.
+If you then switch to the second desktop, it will run the "Close Chrome.bat" and "Open Outlook.bat" programs.
+If you then switch to the third desktop, it will run the "Close Outlook.bat" program.
 
 ### Tray Icon
 

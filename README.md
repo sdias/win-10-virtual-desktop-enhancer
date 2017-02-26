@@ -177,9 +177,9 @@ Here are some examples with different configs:
 With this config:
 <pre>
 [KeyboardShortcutsModifiers]
-SwitchDesktop=LAlt
-MoveWindowToDesktop=LAlt, Shift, Ctrl
-MoveWindowAndSwitchToDesktop=LAlt, Shift
+SwitchDesktop=Win, Ctrl
+MoveWindowToDesktop=
+MoveWindowAndSwitchToDesktop=Win, Ctrl, Shift
 NextTenDesktops=
 
 [KeyboardShortcutsIdentifiers]
@@ -187,8 +187,8 @@ PreviousDesktop=Left
 NextDesktop=Right
 
 [KeyboardShortcutsCombinations]
-TogglePinWindow=LAlt, Shift, Ctrl, Q
-TogglePinApp=LAlt, Shift, Ctrl, A
+TogglePinWindow=Win, Ctrl, Shift, Q
+TogglePinApp=Win, Ctrl, Shift, A
 PinWindow=
 PinApp=
 UnpinWindow=
@@ -201,32 +201,32 @@ The following shortcuts are available:
 
 | Description                                                                    | Keyboard Shortcut                            |
 | ------------------------------------------------------------------------------ | -------------------------------------------- |
-| Switch to desktop by number                                                    | Left Alt + (0-9)                             |
-| Switch to next/previous desktop                                                | Left Alt + (Left/Right Arrow)                |
-| Move the current window to desktop by number                                   | Left Alt + Shift + Ctrl + (0-9)              |
-| Move the current window to next/previous desktop                               | Left Alt + Shift + Ctrl + (Left/Right Arrow) |
-| Move the current window to desktop by number and switch to it                  | Left Alt + Shift + (0-9)                     |
-| Move the current window to next/previous desktop and switch to it              | Left Alt + Shift + (Left/Right Arrow)        |
+| Switch to desktop by number                                                    | Win + Ctrl + (0-9)                           |
+| Switch to next/previous desktop                                                | Win + Ctrl + (Left/Right Arrow)              |
+| Move the current window to desktop by number                                   | Disabled                                     |
+| Move the current window to next/previous desktop                               | Disabled                                     |
+| Move the current window to desktop by number and switch to it                  | Win + Ctrl + Shift + (0-9)                   |
+| Move the current window to next/previous desktop and switch to it              | Win + Ctrl + Shift + (Left/Right Arrow)      |
 | Switch to desktop by number (desktops 11-20)                                   | Disabled                                     |
 | Move the current window to desktop by number (desktops 11-20)                  | Disabled                                     |
 | Move the current window to desktop by number and switch to it (desktops 11-20) | Disabled                                     |
-| Pin/unpin (toggle) current <u>window</u>                                       | Left Alt + Shift + Ctrl + Q                  |
-| Pin/unpin (toggle) current <u>app</u>                                          | Left Alt + Shift + Ctrl + A                  |
+| Pin/unpin (toggle) current <u>window</u>                                       | Win + Ctrl + Shift + Q                       |
+| Pin/unpin (toggle) current <u>app</u>                                          | Win + Ctrl + Shift + A                       |
 | Pin current window to all desktops                                             | Disabled                                     |
 | Pin current app to all desktops                                                | Disabled                                     |
 | Unpin current window from all desktops                                         | Disabled                                     |
 | Unpin current app from all desktops                                            | Disabled                                     |
-| Open Desktop Manager                                                           | Left Alt + (key under Esc)                   |
+| Open Desktop Manager                                                           | Win + Ctrl + (key under Esc)                 |
 
 #### Behavior with custom config
 
 With this config:
 <pre>
 [KeyboardShortcutsModifiers]
-SwitchDesktop=LWin
-MoveWindowToDesktop=
-MoveWindowAndSwitchToDesktop=LWin, Alt
-NextTenDesktops=LShift
+SwitchDesktop=LAlt
+MoveWindowToDesktop=LAlt, Shift
+MoveWindowAndSwitchToDesktop=LAlt, Ctrl, Shift
+NextTenDesktops=Win
 
 [KeyboardShortcutsIdentifiers]
 PreviousDesktop=PgUp
@@ -244,25 +244,24 @@ OpenDesktopManager=
 
 The following shortcuts are available:
 
-| Description                                                                    | Keyboard Shortcut                    |
-| ------------------------------------------------------------------------------ | ------------------------------------ |
-| Switch to desktop by number                                                    | Left Win + (0-9)                     |
-| Switch to next/previous desktop                                                | Left Win + (Page Up/Page Down)       |
-| Move the current window to desktop by number                                   | Disabled                             |
-| Move the current window to next/previous desktop                               | Disabled                             |
-| Move the current window to desktop by number and switch to it                  | Left Win + Alt + (0-9)               |
-| Move the current window to next/previous desktop and switch to it              | Left Win + Alt + (Page Up/Page Down) |
-| Open Desktop Manager                                                           | Left Win + (key under Esc)           |
-| Switch to desktop by number (desktops 11-20)                                   | Left Win + Left Shift + (0-9)        |
-| Move the current window to desktop by number (desktops 11-20)                  | Disabled                             |
-| Move the current window to desktop by number and switch to it (desktops 11-20) | Left Win + Alt + Left Shift + (0-9)  |
-| Pin/unpin (toggle) current <u>window</u>                                       | Disabled                             |
-| Pin/unpin (toggle) current <u>app</u>                                          | Disabled                             |
-| Pin current window to all desktops                                             | Disabled                             |
-| Pin current app to all desktops                                                | Disabled                             |
-| Unpin current window from all desktops                                         | Disabled                             |
-| Unpin current app from all desktops                                            | Disabled                             |
-| Open Desktop Manager                                                           | Disabled                             |
+| Description                                                                    | Keyboard Shortcut                             |
+| ------------------------------------------------------------------------------ | --------------------------------------------- |
+| Switch to desktop by number                                                    | Left Alt + (0-9)                              |
+| Switch to next/previous desktop                                                | Left Alt + (Page Up/Page Down)                |
+| Move the current window to desktop by number                                   | Left Alt + Shift + (0-9)                      |
+| Move the current window to next/previous desktop                               | Left Alt + Shift + (Page Up/Page Down)        |
+| Move the current window to desktop by number and switch to it                  | Left Alt + Ctrl + Shift + (0-9)               |
+| Move the current window to next/previous desktop and switch to it              | Left Alt + Ctrl + Shift + (Page Up/Page Down) |
+| Switch to desktop by number (desktops 11-20)                                   | Left Alt + Win + (0-9)                        |
+| Move the current window to desktop by number (desktops 11-20)                  | Left Alt + Shift + Win (0-9)                  |
+| Move the current window to desktop by number and switch to it (desktops 11-20) | Left Alt + Ctrl + Shift + Win (0-9)           |
+| Pin/unpin (toggle) current <u>window</u>                                       | Disabled                                      |
+| Pin/unpin (toggle) current <u>app</u>                                          | Disabled                                      |
+| Pin current window to all desktops                                             | Disabled                                      |
+| Pin current app to all desktops                                                | Disabled                                      |
+| Unpin current window from all desktops                                         | Disabled                                      |
+| Unpin current app from all desktops                                            | Disabled                                      |
+| Open Desktop Manager                                                           | Disabled                                      |
 
 ### Mouse Shortcuts
 

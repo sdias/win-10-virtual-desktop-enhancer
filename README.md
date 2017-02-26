@@ -152,6 +152,26 @@ These are the available keyboard shortcut settings:
 | KeyboardShortcutsModifiers    | NextTenDesktops              | If doing any of the actions above and targetting a specific desktop (ex: Switch to desktop no. 3) it instead targets the desktop that comes 10 desktops after that one (ex: Switch to desktop no. 13 instead of no. 3). Note that this modifier is works together with the modifiers above. |
 | KeyboardShortcutsIdentifiers  | PreviousDesktop              | Do the action for the previous desktop. |
 | KeyboardShortcutsIdentifiers  | NextDesktop                  | Do the action for the next desktop. |
+| KeyboardShortcutsIdentifiers  | Desktop1                     | Do the action for desktop 1 (or desktop 11 if the key for "NextTenDesktops" is being pressed). |
+| KeyboardShortcutsIdentifiers  | Desktop2                     | Do the action for desktop 2 (or desktop 12 if the key for "NextTenDesktops" is being pressed). |
+| KeyboardShortcutsIdentifiers  | Desktop3                     | Do the action for desktop 3 (or desktop 13 if the key for "NextTenDesktops" is being pressed). |
+| KeyboardShortcutsIdentifiers  | Desktop4                     | Do the action for desktop 4 (or desktop 14 if the key for "NextTenDesktops" is being pressed). |
+| KeyboardShortcutsIdentifiers  | Desktop5                     | Do the action for desktop 5 (or desktop 15 if the key for "NextTenDesktops" is being pressed). |
+| KeyboardShortcutsIdentifiers  | Desktop6                     | Do the action for desktop 6 (or desktop 16 if the key for "NextTenDesktops" is being pressed). |
+| KeyboardShortcutsIdentifiers  | Desktop7                     | Do the action for desktop 7 (or desktop 17 if the key for "NextTenDesktops" is being pressed). |
+| KeyboardShortcutsIdentifiers  | Desktop8                     | Do the action for desktop 8 (or desktop 18 if the key for "NextTenDesktops" is being pressed). |
+| KeyboardShortcutsIdentifiers  | Desktop9                     | Do the action for desktop 9 (or desktop 19 if the key for "NextTenDesktops" is being pressed). |
+| KeyboardShortcutsIdentifiers  | Desktop10                    | Do the action for desktop 10 (or desktop 20 if the key for "NextTenDesktops" is being pressed). |
+| KeyboardShortcutsIdentifiers  | DesktopAlt1                  | Same as "Desktop1". Can be used as an alternative. |
+| KeyboardShortcutsIdentifiers  | DesktopAlt2                  | Same as "Desktop2". Can be used as an alternative. |
+| KeyboardShortcutsIdentifiers  | DesktopAlt3                  | Same as "Desktop3". Can be used as an alternative. |
+| KeyboardShortcutsIdentifiers  | DesktopAlt4                  | Same as "Desktop4". Can be used as an alternative. |
+| KeyboardShortcutsIdentifiers  | DesktopAlt5                  | Same as "Desktop5". Can be used as an alternative. |
+| KeyboardShortcutsIdentifiers  | DesktopAlt6                  | Same as "Desktop6". Can be used as an alternative. |
+| KeyboardShortcutsIdentifiers  | DesktopAlt7                  | Same as "Desktop7". Can be used as an alternative. |
+| KeyboardShortcutsIdentifiers  | DesktopAlt8                  | Same as "Desktop8". Can be used as an alternative. |
+| KeyboardShortcutsIdentifiers  | DesktopAlt9                  | Same as "Desktop9". Can be used as an alternative. |
+| KeyboardShortcutsIdentifiers  | DesktopAlt10                 | Same as "Desktop10". Can be used as an alternative. |
 | KeyboardShortcutsCombinations | OpenDesktopManager           | Open the desktop manager. |
 | KeyboardShortcutsCombinations | TogglePinWindow              | Toggle pin on the current window. |
 | KeyboardShortcutsCombinations | TogglePinApp                 | Toggle pin on all of the windows of the currently opened app. |

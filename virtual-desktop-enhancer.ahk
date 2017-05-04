@@ -56,6 +56,7 @@ Menu, Tray, Click, 1
 
 ReadIni("settings.ini")
 
+global WarpFromEndToStart := (GeneralWarpFromEndToStart != "" and GeneralWarpFromEndToStart ~= "^[01]$") ? GeneralWarpFromEndToStart : 1
 global TooltipsEnabled := (TooltipsEnabled != "" and TooltipsEnabled ~= "^[01]$") ? TooltipsEnabled : 1
 global TooltipsLifespan := (TooltipsLifespan != "" and TooltipsLifespan ~= "^\d+$") ? TooltipsLifespan : 750
 global TooltipsCentered := (TooltipsCentered != "" and TooltipsCentered ~= "^[01]$") ? TooltipsCentered : 1
@@ -396,13 +397,23 @@ _GetDesktopName(n:=1) {
 
 _GetNextDesktopNumber() {
     i := _GetCurrentDesktopNumber()
-    i := (i = _GetNumberOfDesktops() ? 1 : i + 1)
+	if (WarpFromEndToStart == 1) {
+		i := (i == _GetNumberOfDesktops() ? 1 : i + 1)
+	} else {
+		i := (i == _GetNumberOfDesktops() ? i : i + 1)
+	}
+	
     return i
 }
 
 _GetPreviousDesktopNumber() {
     i := _GetCurrentDesktopNumber()
-    i := (i = 1 ? _GetNumberOfDesktops() : i - 1)
+	if (WarpFromEndToStart == 1) {
+		i := (i == 1 ? _GetNumberOfDesktops() : i - 1)
+	} else {
+		i := (i == 1 ? i : i - 1)
+	}
+    
     return i
 }
 

@@ -329,6 +329,7 @@ To create custom packs, simply create one icon per desktop and name them appropr
 You can set what is the default desktop using the "[General] DefaultDesktop" setting.
 You can set if you want to be able to switch desktops by scrolling over the taskbar using the "[General] TaskbarScrollSwitching" setting (1 for yes, 0 for no).
 If your keyboard shortcuts configuration conflicts with the default Windows shortcuts (`Win + Ctrl + Left Arrow` and `Win + Ctrl + Right Arrow`), you can specify if you want to switch between desktops instantly or if you want the default Windows transition to be used, by setting the "[General] UseNativePrevNextDesktopSwitchingIfConflicting setting (1 for yes, 0 for no).
+You can set the "[General] DesktopWrapping" setting to define if the desktops should wrap around (if you try to go to the next desktop when you are in the last desktop, you go to the first desktop, and if you try to go to the previous desktop when you are in the first desktop, you go to the last desktop).
 
 ### Settings Migration Guide
 

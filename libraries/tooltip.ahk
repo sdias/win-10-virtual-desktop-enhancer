@@ -17,8 +17,13 @@ Toast(params:=0) {
 
 	DetectHiddenWindows, On
 
-	; Get total number of monitors.
-	SysGet, monitorN, 80
+  if (TooltipsOnEveryMonitor == "1") {
+    ; Get total number of monitors.
+    SysGet, monitorN, 80
+  } else {
+    ; Consider just the primary monitor.
+    monitorN = 1
+  }
 
 	; For each monitor we need to create and draw the GUI of the toast.
 	Loop, %monitorN% {

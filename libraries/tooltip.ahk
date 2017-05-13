@@ -45,15 +45,22 @@ Toast(params:=0) {
 		WinGetPos, GUIX, GUIY, GUIWidth, GUIHeight
 		GUIWidth += 20
 		GUIHeight += 15
-		if (position == 0) {
-			; Lower right angle
-			NewX := WorkSpaceRight - GUIWidth
-			NewY := WorkspaceBottom - GUIHeight - 12
-		} else {
-			; Center
-			NewX := (WorkSpaceRight + WorkspaceLeft - GUIWidth) / 2
-			NewY := (WorkspaceBottom + WorkSpaceTop - GUIHeight) / 2
-		}
+    if (ToolTipsPositionX == "LEFT") {
+      NewX := WorkSpaceLeft
+    } else if (ToolTipsPositionX == "RIGHT") {
+      NewX := WorkSpaceRight - GUIWidth
+    } else {
+      ; CENTER or something wrong.
+      NewX := (WorkSpaceRight + WorkspaceLeft - GUIWidth) / 2
+    }
+    if (ToolTipsPositionY == "TOP") {
+      NewY := WorkSpaceTop
+    } else if (ToolTipsPositionY == "BOTTOM") {
+      NewY := WorkSpaceBottom - GUIHeight
+    } else {
+      ; CENTER or something wrong.
+      NewY := (WorkSpaceTop + WorkspaceBottom - GUIHeight) / 2
+    }
 
 		; Show the GUI
 		Gui, %GUIHandleName%:Show, Hide x%NewX% y%NewY% w%GUIWidth% h%GUIHeight%
@@ -76,7 +83,7 @@ closePopups() {
 	Loop, %monitorN% {
 		GUIHandleName = GUIForMonitor%A_Index%
 		; Fade out each toast window.
-		DllCall("AnimateWindow", "UInt", GUI_ID_%A_Index%, "Int", 150, "UInt", "0x00090000")
+		DllCall("AnimateWindow", "UInt", GUI_ID_%A_Index%, "Int", TooltipsFadeOutAnimationDuration, "UInt", "0x00090000")
 		; Free the memory used by each toast.
 		Gui, %GUIHandleName%:Destroy
 	}

@@ -95,27 +95,32 @@ You can customize the appearance of this tooltip:
 | Setting         | Description                                                                               | Valid Values                                   |
 | --------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------- |
 | Enabled         | If tooltips should be shown.                                                              | 1 (Yes), 0 (No).                               |
-| Centered        | If the tooltips should appear at the center of the screen, or in the bottom right corner. | 1 (center), 0 (corner).                        |
+| PositionX       | The horizontal position of the tooltip on the monitor.                                    | LEFT, CENTER, RIGHT.                           |
+| PositionY       | The vertical position of the tooltip on the monitor.                                      | TOP, CENTER, BOTTOM.                           |
 | FontSize        | The size of the font.                                                                     | Any reasonable number.                         |
 | FontColor       | The color of the font.                                                                    | Any hexadecimal number (from 0x0 to 0xFFFFFF). |
 | FontInBold      | If the font should be in bold.                                                            | 1 (Yes), 0 (No).                               |
 | BackgroundColor | The color of the background.                                                              | Any hexadecimal number (from 0x0 to 0xFFFFFF). |
 | Lifespan        | The time in milliseconds for which each tooltip will be displayed.                        | Any reasonable number.                         |
+| OnEveryMonitor  | If the tolltips should be shown on every monitor or just on the primary one.              | 1 (Yes), 0 (No).                               |
 
 As an example, you have the default configuration:
 
 <pre>
 [Tooltips]
 Enabled=1
-Centered=1
+PositionX=CENTER
+PositionY=CENTER
 FontSize=11
 FontColor=0xFFFFFF
 FontInBold=1
 BackgroundColor=0x1F1F1F
 Lifespan=750
+FadeOutAnimationDuration=100
+OnEveryMonitor=1
 </pre>
 
-It draws tooltips at the center of the screen, in a white, bold and small font, with a dark background, and they are displayed for 750 milliseconds.
+It draws tooltips at the center of the screen, in a white, bold and small font, with a dark background, and they are displayed on every monitor for 750 milliseconds, with a fade out animation during 100 miliseconds.
 
 ### Keyboard Shortcuts
 

@@ -75,6 +75,9 @@ global taskbarID=0
 global previousDesktopNo=0
 global doFocusAfterNextSwitch=0
 global hasSwitchedDesktopsBefore=1
+global lastDesktopNumber := _GetCurrentDesktopNumber()
+global lastDesktopChangeTime := A_TickCount
+global timeForDesktopToBeActive := 1000
 
 initialDesktopNo := _GetCurrentDesktopNumber()
 
@@ -96,6 +99,7 @@ hkModifiersMoveAndSwitch   := KeyboardShortcutsModifiersMoveWindowAndSwitchToDes
 hkModifiersPlusTen         := KeyboardShortcutsModifiersNextTenDesktops
 hkIdentifierPrevious       := KeyboardShortcutsIdentifiersPreviousDesktop
 hkIdentifierNext           := KeyboardShortcutsIdentifiersNextDesktop
+hkIdentifierLast           := KeyboardShortcutsIdentifiersLastDesktop
 hkComboPinWin              := KeyboardShortcutsCombinationsPinWindow
 hkComboUnpinWin            := KeyboardShortcutsCombinationsUnpinWindow
 hkComboTogglePinWin        := KeyboardShortcutsCombinationsTogglePinWindow
@@ -174,12 +178,17 @@ if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDeskto
 if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierNext))) {
     setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierNext, "OnShiftRightPress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
 }
+if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierLast))) {
+    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierLast, "OnShiftLastPress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
+}
 
 setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierPrevious, "OnMoveLeftPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
 setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierNext, "OnMoveRightPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierLast, "OnMoveLastPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] LastDesktop")
 
 setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkIdentifierPrevious, "OnMoveAndShiftLeftPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
 setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkIdentifierNext, "OnMoveAndShiftRightPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkIdentifierLast, "OnMoveAndShiftLastPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
 
 setUpHotkeyWithCombo(hkComboPinWin, "OnPinWindowPress", "[KeyboardShortcutsCombinations] PinWindow")
 setUpHotkeyWithCombo(hkComboUnpinWin, "OnUnpinWindowPress", "[KeyboardShortcutsCombinations] UnpinWindow")
@@ -232,6 +241,13 @@ OnShiftRightPress() {
     SwitchToDesktop(_GetNextDesktopNumber())
 }
 
+OnShiftLastPress() {
+    global lastDesktopNumber, lastDesktopChangeTime
+    tempDesktopNumber := _getCurrentDesktopNumber()
+    SwitchToDesktop(lastDesktopNumber)
+    lastDesktopNumber := tempDesktopNumber
+}
+
 OnMoveLeftPress() {
     MoveToDesktop(_GetPreviousDesktopNumber())
 }
@@ -240,12 +256,26 @@ OnMoveRightPress() {
     MoveToDesktop(_GetNextDesktopNumber())
 }
 
+OnMoveLastPress() {
+    global lastDesktopNumber, lastDesktopChangeTime
+    tempDesktopNumber := _getCurrentDesktopNumber()
+    MoveToDesktop(lastDesktopNumber)
+    lastDesktopNumber := tempDesktopNumber
+}
+
 OnMoveAndShiftLeftPress() {
     MoveAndSwitchToDesktop(_GetPreviousDesktopNumber())
 }
 
 OnMoveAndShiftRightPress() {
     MoveAndSwitchToDesktop(_GetNextDesktopNumber())
+}
+
+OnMoveAndShiftLastPress() {
+    global lastDesktopNumber, lastDesktopChangeTime
+    tempDesktopNumber := _getCurrentDesktopNumber()
+    MoveAndSwitchToDesktop(lastDesktopNumber)
+    lastDesktopNumber := tempDesktopNumber
 }
 
 OnTaskbarScrollUp() {
@@ -434,6 +464,16 @@ _MoveCurrentWindowToDesktop(n:=1) {
 }
 
 _ChangeDesktop(n:=1) {
+
+    ; If this desktop was active for more than 1000ms mark it as the last used desktop.
+    global lastDesktopChangeTime, lastDesktopNumber, timeForDesktopToBeActive
+    timeSinceLastDesktopChange := A_TickCount - lastDesktopChangeTime
+    lastDesktopChangeTime := A_TickCount
+    if (timeSinceLastDesktopChange > timeForDesktopToBeActive && n != lastDesktopNumber) {
+        lastDesktopNumber := _getCurrentDesktopNumber()
+    }
+
+    ; Change desktop.
     if (n == 0) {
         n := 10
     }

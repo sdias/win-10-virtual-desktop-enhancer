@@ -36,7 +36,7 @@ If you want to have the program start automatically at login follow these steps:
 - Open the folder where you saved the downloaded files;
 - Right click on the executable or on the script file (depending on which one you want to use) -> "Send to" -> "Desktop (create shortcut)";
 - On your desktop there will be a new shortcut for "win10-desktop-enhancer": right click on it -> "cut";
-- Open the start menu and in the serch box enter "run": open the "Run" program which should be the first result;
+- Open the start menu and in the search box enter "run": open the "Run" program which should be the first result;
 - In the box which will pop up enter "shell:startup" and click "OK";
 - A folder will open: right click in the folder -> "Paste";
 - Now if you restart the computer the program should start automatically;

@@ -45,4 +45,4 @@ Please try the first procedure: if it does not work try the second one.
 
 ## Request assistance
 
-If you have problems with the installation of Windows 10 Virtual Desktop Enhancer please submit a new issue in the project page as described [here](request-assistance.md).
+If you have problems with the installation of Windows 10 Virtual Desktop Enhancer please submit a new issue in the project page as described [here](issue-page.md).

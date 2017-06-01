@@ -13,9 +13,14 @@ Windows 10 Virtual Desktop Enhancer is a [AutoHotkey](https://autohotkey.com/) s
 
 - [Installation](installation.md)
 - [Request assistance](issue-page.md)
+- [Customization](settings.md)
 
 ## Installation
 
 Windows 10 Virtual Desktop Enhancer is extremely easy to install: you just have to download and extract the lastest version of the script.
 
 Please read [the installation page](installation.md) for more detailed instructions.
+
+## Customization
+
+Windows 10 Virtual Desktop Enhancer is built to be customizable and to adapt to your needs: learn what how to personalize your experience [here](settings.md).

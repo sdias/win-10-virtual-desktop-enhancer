@@ -33,14 +33,14 @@ If you are reporting a problem or a bug, please include as much details as you c
 
 #### Example of an useless issue
 
-> Title: **Program not working**
+> Title: **Program not working**  
 > Message: The program does not work: I cannot use it correctly as it sometimes stops working.
 
 This description of the problem is exceptionally vague and offers little to no ground for the developers to work on to understand, isolate and solve the problem.
 
 #### Example of a useful issue
 
-> Title: **Program crashes when switching desktops**
+> Title: **Program crashes when switching desktops**  
 > Message: Since I installed the last version of the program sometimes as I switch desktops it crashes without giving any error message: it just shuts down (the icon in the tray bar disappears).  
 > Every time it has happened I was switching from the last to the first desktop, however it does not always happen: sometimes it will switch correctly and sometimes it will crash.
 

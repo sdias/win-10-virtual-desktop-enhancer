@@ -1,13 +1,13 @@
 # Windows 10 Virtual Desktop Enhancer - Home
 
-Windows 10 Virtual Desktop Enhancer is a [AutoHotkey](https://autohotkey.com/) script which adds some useful features to Windows 10 Virtual Dekstops, like:
+Windows 10 Virtual Desktop Enhancer is a [AutoHotkey](https://autohotkey.com/) script which adds some useful features to Windows 10 Virtual Desktops, like:
 
-- extra customizable keyboard shortcuts to switch or move a window to a different desktop;
-- customizable keyboard shortcuts to pin a window or a program to all desktops;
-- setting a custom wallpaper for each virtual desktop (either a picture or a solid color);
-- an indicator in the tray area customizable with various icon packs showing the number of the current desktop;
-- assigning custom desktop names to each desktop;
-- fully customizable tooltips showing the desktop name when switching desktops.
+- Extra customizable keyboard shortcuts to switch or move a window to a different desktop
+- Customizable keyboard shortcuts to pin a window or a program to all desktops
+- Setting a custom wallpaper for each virtual desktop (either a picture or a solid color)
+- An indicator in the tray area customizable with various icon packs showing the number of the current desktop
+- Assigning custom desktop names to each desktop
+- Fully customizable tooltips showing the desktop name when switching desktops
 
 ## Main resources
 
@@ -23,7 +23,7 @@ Please read [the installation page](installation.md) for more detailed instructi
 
 ## Customization
 
-Windows 10 Virtual Desktop Enhancer is built to be customizable and to adapt to your needs: learn what how to personalize your experience [here](settings.md).
+Windows 10 Virtual Desktop Enhancer is built to be customizable and to adapt to your needs: learn how to personalize your experience [here](settings.md).
 
 ## License
 
@@ -42,8 +42,8 @@ Thanks to the creator of the ReadINI AHK library, found [here](https://autohotke
 
 Thanks to the artists that created the packed wallpapers, whom I lost track of. Sorry.
 
-Thanks to rob3110 on reddit for the extra white icon theme.
+Thanks to rob3110 on Reddit for the extra white icon theme.
 
-Thanks to several people on reddit.com/r/windows10 and in the project's github page for their suggestions.
+Thanks to several people on reddit.com/r/windows10 and in the project's Github page for their suggestions.
 
 Thanks to mlabaj (Martin Labaj) for his code for the window pinning functionality.

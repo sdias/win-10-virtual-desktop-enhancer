@@ -10,35 +10,37 @@ Mainly you will have to edit some lines in the `settings.ini` file in the main f
 - [Desktop names](#desktop-names)
 - [Tooltips](#tooltips)
 - [Keyboard shortcuts](#keyboard-shortcuts)
-- [Run programs when switching desktops](#run-programs-when-switching-desktop)
+- [Run programs when switching desktops](#run-programs-when-switching-desktops)
+- [Tray icon](#tray-icon)
+- [Old settings migration](#old-settings-migration)
 
 ## Main settings
 
-The main settings are found in the `[General]` section of the `settings.ini` file and are used to define basic settings of the program.  
+The main settings are found in the `[General]` section of the `settings.ini` file and are used to define some basic settings of the program.  
 
 | Setting                                        | Description                                                                                                        | Valid Values                               |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
 | DefaultDesktop                                 | Which desktop will be used as default (The program will switch to this desktop when started).                      | Any valid desktop number                   |
-| TaskbarScrollSwitching                         | If scrolling over the taskbar will switch desktops.                                                                | `1`, `0` (Meaning Yes and No respectively) |
-| UseNativePrevNextDesktopSwitchingIfConflicting | Whether to switch between desktops instantly or with the default Windows transition if the shortcuts conflict.     | `1`, `0` (Meaning Yes and No respectively) |
-| DesktopWrapping                                | If going right from the last desktop should take you to the first one and vice-versa.                              | `1`, `0` (Meaning Yes and No respectively) |
+| TaskbarScrollSwitching                         | If scrolling over the taskbar will switch desktops.                                                                | `1`, `0` (Meaning YES and NO respectively) |
+| UseNativePrevNextDesktopSwitchingIfConflicting | Whether to switch between desktops instantly or with the default Windows transition if the shortcuts conflict.     | `1`, `0` (Meaning YES and NO respectively) |
+| DesktopWrapping                                | If going right from the last desktop should take you to the first one and vice-versa.                              | `1`, `0` (Meaning YES and NO respectively) |
 
 ## Custom wallpapers
 
 You can set each virtual desktop to have its own wallpaper (an image or a fixed color) by editing the `[Wallpapers]` section of the `settings.ini` file.  
-If you set the config of that desktop to empty (ex: `5=`) the wallpaper won't change when you switch to that desktop.  
+If you set the configuration of that desktop to empty (ex: `5=`) the wallpaper won't change when you switch to that desktop.  
 Also note that any number of desktops are supported, just add a line for each new one, like shown in the examples.
 
 ### Image wallpapers
 
-You can set the wallpaper for a certain desktop to be an image by adding the image path on the line corresponding next to the desktop number in the `Wallpapers` section.  
+You can set the wallpaper for a certain desktop to be an image by adding the image path on the line corresponding to the desktop number in the `[Wallpapers]` section.  
 Image paths can be absolute (e.g. `C:\Wallpapers\Default.jpg`) or relative (e.g. `..\images\Default.jpg`).
 
 To get the absolute path of any file (in this case an image file) saved on your computer open the folder where it's saved, right click on it, copy the "Path" string and the name together with the extension, then merge them like this: `PATH\NAME.EXTENSION`. For example if the path is `C:\Programs\Test` and the filename is `image.png` the absolute path will be `C:\Program\Test\image.png`.
 
 ### Solid color wallpapers
 
-You can set the wallpaper for a certain desktop to a solid color by adding the hexadecimal RGB code for that color next to the desktop number in the `Wallpapers` section.  
+You can set the wallpaper for a certain desktop to a solid color by adding the hexadecimal RGB code for that color next to the desktop number in the `[Wallpapers]` section.  
 
 You can use [this special Google page](https://www.google.it/search?q=color+picker) to pick your color: its corresponding hexadecimal RGB code will be displayed on the left (e.g. pure red is `#ff0000`). Copy it, paste it in the correct place and replace the `#` with `0x` (`#ff0000` becomes `0xff0000`).
 
@@ -67,7 +69,7 @@ Here is an example of a working configuration:
 ## Desktop names
 
 In a similar manner to wallpapers you can assign a custom name to each virtual desktop: you can choose your own names by editing the `[DesktopNames]` section of the `settings.ini` file.  
-The name will be shown in a popup every time you witch desktop (if you activated the popup feature) and in the tooltip of the tray icon.  
+The name will be shown in a popup every time you switch desktop (if you activated the popup feature) and in the tooltip of the tray icon.  
 If a desktop's name is not set, "Desktop <number>" will be displayed.  
 Again, like wallpapers, any number of desktops are supported by this feature: you can expand by adding new lines with new numbers.
 
@@ -92,22 +94,22 @@ Here is an example of a working configuration:
 
 ## Tooltips
 
-If you enable tooltips, every time you switch desktops a tooltip will appear letting you know the name of the desktop you switched to.
+If you enable this feature a tooltip will appear every time you switch desktops letting you know the name of the desktop you switched to.
 
 You can customize the appearance of these tooltips by editing the settings in the `[Tooltips]` section of the `settings.ini` file:  
 
 | Setting                   | Description                                                                               | Valid Values                                   |
 | ------------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| Enabled                   | If tooltips should be shown.                                                              | `1`, `0` (Meaning Yes and No respectively)     |
+| Enabled                   | If tooltips should be shown.                                                              | `1`, `0` (Meaning YES and NO respectively)     |
 | PositionX                 | The horizontal position of the tooltip on the monitor.                                    | LEFT, CENTER, RIGHT                            |
 | PositionY                 | The vertical position of the tooltip on the monitor.                                      | TOP, CENTER, BOTTOM                            |
 | FontSize                  | The size of the font.                                                                     | Any reasonable number                          |
 | FontColor                 | The color of the font.                                                                    | Any hexadecimal number (from 0x0 to 0xFFFFFF)  |
-| FontInBold                | If the font should be in bold.                                                            | `1`, `0` (Meaning Yes and No respectively)     |
+| FontInBold                | If the font should be in bold.                                                            | `1`, `0` (Meaning YES and NO respectively)     |
 | BackgroundColor           | The color of the background.                                                              | Any hexadecimal number (from 0x0 to 0xFFFFFF)  |
 | Lifespan                  | The time in milliseconds for which each tooltip will be displayed.                        | Any reasonable number                          |
 | FadeOutAnimationDuration  | The duration of the FadeOut animation in milliseconds.                                    | Any resonable number (best if less than 500)   |
-| OnEveryMonitor            | If the tooltips should be shown on every monitor or just on the primary one.              | `1`, `0` (Meaning Yes and No respectively)     |
+| OnEveryMonitor            | If the tooltips should be shown on every monitor or just on the primary one.              | `1`, `0` (Meaning YES and NO respectively)     |
 
 ### Example configuration
 
@@ -148,11 +150,12 @@ The following are the available context for those actions:
 
 To create a shortcut you need to specify a  _modifier key combination_ representing the action and an _identifier key_ representing the context.
 
-A _modifier key combination_ must be composed of one ore more keys chosen from these: `Ctrl`, `Shift`, `Alt`, `Win`, while an _identifier key_ can be any single key (you can find a list with the name of the special keys like the arrows, backspace, caps lock and so on [here](https://autohotkey.com/docs/KeyList.htm#Keyboard)).
+A _modifier key combination_ must be composed of one ore more keys chosen from this list: `Ctrl`, `Shift`, `Alt`, `Win`, while an _identifier key_ can be any single key except those used as _modifiers_ (you can find a list with the names of special keys like the arrows, backspace, caps lock and so on [here](https://autohotkey.com/docs/KeyList.htm#Keyboard)).
 
 For example: if you want to set up a keyboard shortcut to be able to switch to the next desktop, you need to set up the modifier keys for "switch to another desktop" (for example, `Ctrl, Win`), and also set up the identifier key for "next desktop" (for example, `Right`). Now pressing `Ctrl + Win + Right arrow` will switch to the next desktop.
 
 The following actions are not executed in the context of a virtual desktop and therefore are defined directly by a _key combination_:
+
 - Open the desktop manager
 - Pin the currently visible window, which makes it visible in all of the virtual desktops
 - Unpin the currently visible window
@@ -174,7 +177,7 @@ Also note that if a setting is set to empty or not set at all, the feature corre
 
 #### Keyboard shortcuts modifier keys
 
-Each modifier keys' setting can be a combination of the `Ctrl`, `Shift`, `Alt`, `Win` keys, separated by commas. For each key, you can use the left or right variant of the keys specifically, by adding `L` or `R` before the name of the key (ex: `LCtrl`), otherwise both can be used. See below for examples.
+Each _modifier_ keys' setting can be a combination of the `Ctrl`, `Shift`, `Alt`, `Win` keys, separated by commas. For each key, you can use the left or right variant of the keys specifically, by adding `L` or `R` before the name of the key (e.g. `LCtrl`), otherwise both can be used. See below for examples.
 
 | Name                         | Description                                 |
 | ---------------------------- | ------------------------------------------- |
@@ -185,7 +188,7 @@ Each modifier keys' setting can be a combination of the `Ctrl`, `Shift`, `Alt`, 
 
 #### Keyboard shortcuts identifier keys
 
-Each identifier keys' setting can be single key of your keyboard. They can be set to any value [in this page](https://autohotkey.com/docs/KeyList.htm#Keyboard) (except for keys already used as modifiers).
+Each _identifier_ keys' setting can be single key of your keyboard. They can be set to any value listed [in this page](https://autohotkey.com/docs/KeyList.htm#Keyboard) (except for keys already used as _modifiers_).
 
 | Name                         | Description                                 |
 | ---------------------------- | ------------------------------------------- |
@@ -214,7 +217,7 @@ Each identifier keys' setting can be single key of your keyboard. They can be se
 
 #### Keyboard shortcuts combinations
 
-Each combination keys' setting follows the same rules as the [modifier keys' settings](#keyboard-shortcuts-modifier-keys), but in addition to that you need to add a single non-modifier key to the end, in the same format as described for the [identifier keys' settings](#keyboard-shortcuts-identifier-keys).
+_Combination_ keys' settings follow the same rules as [modifier keys' settings](#keyboard-shortcuts-modifier-keys), but in addition to that you need to add a single non-modifier key to the end, in the same format as described for the [identifier keys' settings](#keyboard-shortcuts-identifier-keys).
 
 | Name                         | Description                                                   |
 | ---------------------------- | ------------------------------------------------------------- |
@@ -232,7 +235,7 @@ These are two configuration to better explain the syntax of keyboard shortcuts.
 
 #### Default configuration
 
-With this config:
+With this configuration:
 
 ```ini
 [KeyboardShortcutsModifiers]
@@ -279,7 +282,7 @@ The following shortcuts are available:
 
 #### Custom configuration
 
-With this config:
+With this configuration:
 ```ini
 [KeyboardShortcutsModifiers]
 SwitchDesktop=LAlt
@@ -364,7 +367,7 @@ By default the white text on black background icon pack is set, but more packs a
 
 To create personalized custom packs, simply create one icon per desktop and name them appropriately (`[desktop number goes here].ico`, ex: `1.ico`, `5.ico`, `99.ico`). If the current desktop does not have an icon for it, the `+.ico` icon is shown instead, so make sure you create that as well for your pack.
 
-## Settings Migration (version 0.9.1)
+## Old settings migration
 
 Between version 0.9.1 and the following ones, the name and location of some settings changed. The table and examples below should explain what was changed.
 

@@ -23,25 +23,25 @@ Please try the first procedure: if it does not work try the second one.
 
 #### Procedure 1: Autostart folder
 
-1. open the folder where you saved the downloaded files;
-2. right click on the executable or on the script file (depending on which one you want to use) -> "Send to" -> "Desktop (create shortcut)";
-3. on your desktop there should now be a new shortcut for "virtual-desktop-enhancer.exe": right click on it -> "cut";
-4. open the Start menu; in the search box enter "run" and open the "Run" program which should be the first result;
-5. in the box which will pop up enter `shell:startup` and click "OK";
-6. a folder will open: right click in the folder -> "Paste";
-7. now if you restart the computer the program should start automatically.
+1. Open the folder where you saved the downloaded files
+2. Right click on the executable or on the script file (depending on which one you want to use) -> "Send to" -> "Desktop (create shortcut)"
+3. On your desktop there should now be a new shortcut for "virtual-desktop-enhancer.exe": right click on it -> "cut"
+4. Open the Start menu; in the search box enter "run" and open the "Run" program which should be the first result
+5. In the box which will pop up enter `shell:startup` and click "OK"
+6. A folder will open: right click in the folder -> "Paste"
+7. Now if you restart the computer the program should start automatically
 
 #### Procedure 2: Task scheduler
 
-1. open the Start menu and in the search box enter "run": open the "Run" program which should be the first result;
-2. in the box which will pop up enter `Taskschd.msc` and click "OK";
-3. in the menu of window that will open click "Action" -> "Create Basic Task";
-4. choose a name and a description for the task (e.g. "win10-virtual-desktop-enhancer starter") and press "Next";
-5. choose "When I log on" and click "Next";
-6. choose "Start a program" and click "Next";
-7. click on "Browse" and select the "virtual-desktop-enhancer.exe" file in the folder where you have extracted it and click "Next";
-8. verify that all the settings are correct and click "End";
-9. you can now close the window: if you restart the computer Windows 10 Virtual Desktop Enhancer should start automatically.
+1. Open the Start menu and in the search box enter "run": open the "Run" program which should be the first result
+2. In the box which will pop up enter `Taskschd.msc` and click "OK"
+3. In the menu of window that will open click "Action" -> "Create Basic Task"
+4. Choose a name and a description for the task (e.g. "win10-virtual-desktop-enhancer starter") and press "Next"
+5. Choose "When I log on" and click "Next"
+6. Choose "Start a program" and click "Next"
+7. Click on "Browse" and select the "virtual-desktop-enhancer.exe" file in the folder where you have extracted it and click "Next"
+8. Verify that all the settings are correct and click "End"
+9. You can now close the window: if you restart the computer Windows 10 Virtual Desktop Enhancer should start automatically
 
 ## Request assistance
 

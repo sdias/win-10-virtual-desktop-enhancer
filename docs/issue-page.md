@@ -12,9 +12,9 @@ If you open that link you will find a list of open issues (which have not been s
 
 If you have found yourself in any of these situations:
 
-- you have experienced any problem using this program;
-- you found a bug in the program
-- you have an idea about a nice feature this program lacks and you think it could be useful in a future release;
+- You have experienced any problem using this program
+- You found a bug in the program
+- You have an idea about a nice feature this program lacks and you think it could be useful in a future release
 
 First of all, open the [issue page](https://github.com/sdias/win-10-virtual-desktop-enhancer/issues/) and search among the issues (both open and closed ones, you can switch which you are viewing at the top, under the search bar) to verify that your problem/bug/idea has not been already submitted.  
 If you found an issue which applies to your situation and it has been closed, please read all the discussion thoroughly: it could contain the solution to your problem or an explanation about why the issue was closed. If the issue is still open instead feel free to contribute to the issue with your own experience: it will help everyone involved.  
@@ -26,10 +26,10 @@ If you did not find any issue related to your case then you can submit a new iss
 
 If you are reporting a problem or a bug, please include as much details as you can, for example:
 
-- which version of the program are you using?
-- what happened when you experienced the problem? What were you expecting to happen instead?
-- is this a recurring issue or a one-time event?
-- have you tried anything to solve it? Have you had any form of success?
+- Which version of the program are you using?
+- What happened when you experienced the problem? What were you expecting to happen instead?
+- Is this a recurring issue or a one-time event?
+- Have you tried anything to solve it? Have you had any form of success?
 
 #### Example of an useless issue
 

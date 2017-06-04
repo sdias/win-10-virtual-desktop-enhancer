@@ -7,11 +7,11 @@ This is not something that can be changed or _fixed_ in any way.
 
 For this app to work, you first might need to install "Visual C++ Redistributable for Visual Studio 2015". It should be available [here](https://www.microsoft.com/en-us/download/details.aspx?id=48145).
 
-Since [version 0.7.0](https://github.com/sdias/win-10-virtual-desktop-enhancer/releases/tag/0.7) this app will only work if your system has the "Windows 10 Anniversary" update installed.
+Since [version 0.7.0](https://github.com/sdias/win-10-virtual-desktop-enhancer/releases/tag/0.7) this app will only work if your system has the "Windows 10 Anniversary" update (or later) installed.
 
 ## Procedure
 
-Windows 10 Virtual Desktop Enhancer does not need to be installed: simply download [the lastest version](https://github.com/sdias/win-10-virtual-desktop-enhancer/releases/latest) and extract it into a folder in your computer.  
+Windows 10 Virtual Desktop Enhancer does not need to be installed: simply download [the latest version](https://github.com/sdias/win-10-virtual-desktop-enhancer/releases/latest) and extract it into a folder in your computer.  
 Once you have downloaded it you can run it just by executing `virtual-desktop-enhancer.exe` in the folder where you extracted it.
 
 Alternatively you can install [AutoHotkey](https://autohotkey.com/) and run the `virtual-desktop-enhancer.ahk` script file instead.
@@ -21,7 +21,7 @@ Alternatively you can install [AutoHotkey](https://autohotkey.com/) and run the 
 There are two easy ways to have this program automatically start when you login.  
 Please try the first procedure: if it does not work try the second one.
 
-#### Precodure 1: Autostart folder
+#### Procedure 1: Autostart folder
 
 1. open the folder where you saved the downloaded files;
 2. right click on the executable or on the script file (depending on which one you want to use) -> "Send to" -> "Desktop (create shortcut)";
@@ -31,7 +31,7 @@ Please try the first procedure: if it does not work try the second one.
 6. a folder will open: right click in the folder -> "Paste";
 7. now if you restart the computer the program should start automatically.
 
-#### Precodure 2: Task scheduler
+#### Procedure 2: Task scheduler
 
 1. open the Start menu and in the search box enter "run": open the "Run" program which should be the first result;
 2. in the box which will pop up enter `Taskschd.msc` and click "OK";

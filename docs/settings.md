@@ -14,7 +14,7 @@ Mainly you will have to edit some lines in the `settings.ini` file in the main f
 
 ## Main settings
 
-The main settigns are found in the `[General]` section of the `settings.ini` file and are used to define basic settings of the program.  
+The main settings are found in the `[General]` section of the `settings.ini` file and are used to define basic settings of the program.  
 
 | Setting                                        | Description                                                                                                        | Valid Values                               |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
@@ -40,7 +40,7 @@ To get the absolute path of any file (in this case an image file) saved on your 
 
 You can set the wallpaper for a certain desktop to a solid color by adding the hexadecimal RGB code for that color next to the desktop number in the `Wallpapers` section.  
 
-You can use [this special Google page](https://www.google.it/search?q=color+picker) to pick your color: its corrisponding hexadecimal RGB code will be displayed on the left (e.g. pure red is `#ff0000`). Copy it, paste it in the correct place and replace the `#` with `0x` (`#ff0000` becomes `0xff0000`).
+You can use [this special Google page](https://www.google.it/search?q=color+picker) to pick your color: its corresponding hexadecimal RGB code will be displayed on the left (e.g. pure red is `#ff0000`). Copy it, paste it in the correct place and replace the `#` with `0x` (`#ff0000` becomes `0xff0000`).
 
 ### Example configuration
 
@@ -67,7 +67,7 @@ Here is an example of a working configuration:
 ## Desktop names
 
 In a similar manner to wallpapers you can assign a custom name to each virtual desktop: you can choose your own names by editing the `[DesktopNames]` section of the `settings.ini` file.  
-The name will be shown in a popup everytime you witch desktop (if you activated the popup feature) and in the tooltip of the tray icon.  
+The name will be shown in a popup every time you witch desktop (if you activated the popup feature) and in the tooltip of the tray icon.  
 If a desktop's name is not set, "Desktop <number>" will be displayed.  
 Again, like wallpapers, any number of desktops are supported by this feature: you can expand by adding new lines with new numbers.
 
@@ -107,11 +107,11 @@ You can customize the appearance of these tooltips by editing the settings in th
 | BackgroundColor           | The color of the background.                                                              | Any hexadecimal number (from 0x0 to 0xFFFFFF)  |
 | Lifespan                  | The time in milliseconds for which each tooltip will be displayed.                        | Any reasonable number                          |
 | FadeOutAnimationDuration  | The duration of the FadeOut animation in milliseconds.                                    | Any resonable number (best if less than 500)   |
-| OnEveryMonitor            | If the tolltips should be shown on every monitor or just on the primary one.              | `1`, `0` (Meaning Yes and No respectively)     |
+| OnEveryMonitor            | If the tooltips should be shown on every monitor or just on the primary one.              | `1`, `0` (Meaning Yes and No respectively)     |
 
 ### Example configuration
 
-As an example, here you can find the default configuration and a brief explaination of its behaviour:
+As an example, here you can find the default configuration and a brief explanation of its behavior:
 
 ```ini
 [Tooltips]
@@ -127,7 +127,7 @@ FadeOutAnimationDuration=100
 OnEveryMonitor=1
 ```
 
-This configuration causes tooltips to be drawn on every monitor at the center of the screen, in a white, bold and small font, with a dark background: they are shown for 750 milliseconds, then fade out with an animation during 100 miliseconds.
+This configuration causes tooltips to be drawn on every monitor at the center of the screen, in a white, bold and small font, with a dark background: they are shown for 750 milliseconds, then fade out with an animation during 100 milliseconds.
 
 ## Keyboard shortcuts
 
@@ -181,7 +181,7 @@ Each modifier keys' setting can be a combination of the `Ctrl`, `Shift`, `Alt`, 
 | SwitchDesktop                | Switch to a desktop.                        |
 | MoveWindowToDesktop          | Move the current window to another desktop. |
 | MoveWindowAndSwitchToDesktop | Move the current window to another desktop, and switch to it. |
-| NextTenDesktops              | If doing any of the actions above and targetting a specific desktop (ex: Switch to desktop no. 3) it instead targets the desktop that comes 10 desktops after that one (ex: Switch to desktop no. 13 instead of no. 3). Note that this modifier works together with the modifiers above. |
+| NextTenDesktops              | If doing any of the actions above and targeting a specific desktop (ex: Switch to desktop no. 3) it instead targets the desktop that comes 10 desktops after that one (ex: Switch to desktop no. 13 instead of no. 3). Note that this modifier works together with the modifiers above. |
 
 #### Keyboard shortcuts identifier keys
 
@@ -364,7 +364,7 @@ By default the white text on black background icon pack is set, but more packs a
 
 To create personalized custom packs, simply create one icon per desktop and name them appropriately (`[desktop number goes here].ico`, ex: `1.ico`, `5.ico`, `99.ico`). If the current desktop does not have an icon for it, the `+.ico` icon is shown instead, so make sure you create that as well for your pack.
 
-## Settings Mmgration (version 0.9.1)
+## Settings Migration (version 0.9.1)
 
 Between version 0.9.1 and the following ones, the name and location of some settings changed. The table and examples below should explain what was changed.
 

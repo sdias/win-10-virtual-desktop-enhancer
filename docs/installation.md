@@ -5,7 +5,7 @@
 **This application only works on Windows 10 x64 (64 bit) systems** due to limitations in the library used to control the virtual desktops.  
 This is not something that can be changed or _fixed_ in any way.
 
-For this app to work, you first might need to install "Visual C++ Redistributable for Visual Studio 2015". It should be available [here](https://www.microsoft.com/en-us/download/details.aspx?id=48145).
+For this app to work, you first might need to install "Visual C++ Redistributable for Visual Studio 2015". It should be available [here](https://www.microsoft.com/en-us/download/details.aspx?id=52685).
 
 Since [version 0.7.0](https://github.com/sdias/win-10-virtual-desktop-enhancer/releases/tag/0.7) this app will only work if your system has the "Windows 10 Anniversary" update (or later) installed.
 

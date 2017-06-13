@@ -16,7 +16,8 @@ If you have found yourself in any of these situations:
 - You found a bug in the program
 - You have an idea about a nice feature this program lacks and you think it could be useful in a future release
 
-First of all, open the [issue page](https://github.com/sdias/win-10-virtual-desktop-enhancer/issues/) and search among the issues (both open and closed ones, you can switch which you are viewing at the top, under the search bar) to verify that your problem/bug/idea has not been already submitted.  
+First of all you can find a list of known issues for this project [here](known-issues.md): check if the issue you are experiencing is among them.  
+If you can't find it or if the proposed solution does not work open this project's [GitHub issue page](https://github.com/sdias/win-10-virtual-desktop-enhancer/issues/) and search among the issues (both open and closed ones, you can switch which you are viewing at the top, under the search bar) to verify that your problem/bug/idea has not been already submitted.  
 If you found an issue which applies to your situation and it has been closed, please read all the discussion thoroughly: it could contain the solution to your problem or an explanation about why the issue was closed. If the issue is still open instead feel free to contribute to the issue with your own experience: it will help everyone involved.  
 If you did not find any issue related to your case then you can submit a new issue by clicking on the green "New issue" button at the top of the page.
 

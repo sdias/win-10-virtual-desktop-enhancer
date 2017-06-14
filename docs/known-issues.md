@@ -14,14 +14,16 @@ For a complete list of all the issues reported for this project visit [this page
 
 ### Programs run as another user
 
-**Problem**:
+**Problem**:  
 Windows 10 Virtual Desktop Enhancer can have some difficulties when interacting with windows which are run with higher rights than the program itself.  
-For example [issue 21](https://github.com/sdias/win-10-virtual-desktop-enhancer/issues/21) highlights how the program cannot interact with programs started with Windows "Run as another user" functionality.  
-Another example of similar behaviour has been observed with certain programs run with elevated privileges (e.g. Windows Task Scheduler).
+[This comment on issue #21](https://github.com/sdias/win-10-virtual-desktop-enhancer/issues/21#issuecomment-308504500) collects what is known about the interaction between this program and other programs run as other users; most importantly:
 
-**Workaround**:
-While no definitive solution to these problems can be provided as they are related to an external library used by this project, a simple workaround is to run Windows 10 Virtual Desktop Enhancer with Administrative rights.  
-I fyou want to test this follow these steps:
+- When running as a normal user Windows 10 Virtual Desktop Enhancer will not work when a program run as another user is focused
+- If your account is an administrator you should experience no problem at all, still if you do you can run WIndows 10 VIrtual Desktop Enhancer as administrator to solve those issues
+
+**Workaround**:  
+While no definitive solution to these problems can be provided as they are related to an external library used by this project, a simple workaround is to run Windows 10 Virtual Desktop Enhancer with administrative rights.  
+If you want to test this workaround follow these steps:
 
 - Right click on the executable or on the link
 - Click "Run as administrator"
@@ -33,31 +35,31 @@ If you want it to always run with administrative rights floow these steps:
 - Select the "Compatibility"
 - Check "Run this program as an administrator"
 
-This has been reported to solve the issue at the cost of breaking the tray icon (it will not change anymore according to the current desktop number anymore).
+This will solve the issues at the cost of breaking the tray icon and tooltip functionalities, except if your account is an administrator.
 
 ### Remote Desktop Protocol
 
-**Problem**:
+**Problem**:  
 In [issue #15](https://github.com/sdias/win-10-virtual-desktop-enhancer/issues/15) an user reported that while connecting via RDP (Remote Desktop Protocol) to a remote machine running this application he experienced some trouble with hotkeys not being correctly transmitted to the remote machine and with the program not cahnging dekstops and wallpapers correctly.
 
-**Solution**:
+**Solution**:  
 There is no solution or workaround for this issue: if you experience similar problems you can report them in a new issue or in [issue #15](https://github.com/sdias/win-10-virtual-desktop-enhancer/issues/15) if you believe it to be related.
 
 ### Synergy and AutoHotkey
 
-**Problem**:
+**Problem**:  
 [Issue #41](https://github.com/sdias/win-10-virtual-desktop-enhancer/issues/41) seems to suggest that AutoHotkey and [Synergy](https://symless.com/synergy) can conflict and prevent some hotkey combination from working correctly: in this particular issue it has been reported that it was not possible to issue more than one command holding down the modifier keys (e.g. `Ctrl + Win + Left + Left` to switch tow desktops to the left).
 
-**Solution**:
+**Solution**:  
 There is no solution or workaround for this issue even though many more similar issues regarding conflicts between these two programs can be found on the internet.
 
 ### Windows 10 Game Bar
 
-**Problem**:
+**Problem**:  
 In [issue 57](https://github.com/sdias/win-10-virtual-desktop-enhancer/issues/57) an user reported how certain hotkeys in certain situations triggered a popup from Windows asking whether or not to start the Game Bar.  
 In particular any hotkey combination containing the `Alt` key alone or with other keys or any hotkey containing the `Win` key alone seem to cause this issue.
 
-**Workaround**:
+**Workaround**:  
 Although it has not been possible to pinpoint exactly what the root cause of this bug is, there are two available workarounds:
 
  - Disabling the Windows Game Bar (recommended if it's not used on your computer). [Here is a guide](https://www.howtogeek.com/273180/how-to-disable-windows-10s-game-dvr-and-game-bar/) explaining how to do it

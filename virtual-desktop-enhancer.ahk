@@ -77,7 +77,7 @@ global doFocusAfterNextSwitch=0
 global hasSwitchedDesktopsBefore=1
 global lastActiveDesktopNumber := _GetCurrentDesktopNumber()
 global lastDesktopChangeTime := A_TickCount
-global timeForDesktopToBeActive := 1000
+global timeForDesktopToBeActive=1000
 
 initialDesktopNo := _GetCurrentDesktopNumber()
 
@@ -178,9 +178,7 @@ if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDeskto
 if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierNext))) {
     setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierNext, "OnShiftRightPress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
 }
-if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierLastActive))) {
-    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierLastActive, "OnShiftLastActivePress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] LastActiveDesktop")
-}
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierLastActive, "OnShiftLastActivePress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] LastActiveDesktop")
 
 setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierPrevious, "OnMoveLeftPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
 setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierNext, "OnMoveRightPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
@@ -242,10 +240,18 @@ OnShiftRightPress() {
 }
 
 OnShiftLastActivePress() {
-    global lastActiveDesktopNumber, lastDesktopChangeTime
-    tempDesktopNumber := _getCurrentDesktopNumber()
-    SwitchToDesktop(lastActiveDesktopNumber)
-    lastActiveDesktopNumber := tempDesktopNumber
+    ; Shift to the last active desktop.
+
+    global lastActiveDesktopNumber
+    
+    ; Prepare to switch desktop by saving the target desktop.
+    targetDesktopNumber := lastActiveDesktopNumber
+    ; Save the current desktop as the last active desktop.
+    ; This lets the user rapidly switch back and forth between the two last active desktops
+    ; without waiting timeForDesktopToBeActive milliseconds.
+    lastActiveDesktopNumber := _getCurrentDesktopNumber()
+    lastActiveDesktopChangeTime := A_TickCount
+    SwitchToDesktop(targetDesktopNumber)
 }
 
 OnMoveLeftPress() {
@@ -257,10 +263,11 @@ OnMoveRightPress() {
 }
 
 OnMoveLastActivePress() {
-    global lastActiveDesktopNumber, lastDesktopChangeTime
-    tempDesktopNumber := _getCurrentDesktopNumber()
+    ; Move the window to the last active desktop.
+
+    global lastActiveDesktopNumber
+    
     MoveToDesktop(lastActiveDesktopNumber)
-    lastActiveDesktopNumber := tempDesktopNumber
 }
 
 OnMoveAndShiftLeftPress() {
@@ -272,10 +279,18 @@ OnMoveAndShiftRightPress() {
 }
 
 OnMoveAndShiftLastActivePress() {
-    global lastActiveDesktopNumber, lastDesktopChangeTime
-    tempDesktopNumber := _getCurrentDesktopNumber()
-    MoveAndSwitchToDesktop(lastActiveDesktopNumber)
-    lastActiveDesktopNumber := tempDesktopNumber
+    ; Move the current window to the last active desktop and shift to it.
+    
+    global lastActiveDesktopNumber
+    
+    ; Prepare to switch desktop by saving the target desktop.
+    targetDesktopNumber := lastActiveDesktopNumber
+    ; Save the current desktop as the last active desktop.
+    ; This lets the user rapidly switch back and forth between the two last active desktops
+    ; without waiting timeForDesktopToBeActive milliseconds.
+    lastActiveDesktopNumber := _getCurrentDesktopNumber()
+    lastActiveDesktopChangeTime := A_TickCount
+    MoveAndSwitchToDesktop(targetDesktopNumber)
 }
 
 OnTaskbarScrollUp() {
@@ -464,12 +479,12 @@ _MoveCurrentWindowToDesktop(n:=1) {
 }
 
 _ChangeDesktop(n:=1) {
-
-    ; If this desktop was active for more than 1000ms mark it as the last used desktop.
     global lastDesktopChangeTime, lastActiveDesktopNumber, timeForDesktopToBeActive
+    
+    ; If this desktop was active for more than 1000ms save it as the last active desktop.
     timeSinceLastDesktopChange := A_TickCount - lastDesktopChangeTime
     lastDesktopChangeTime := A_TickCount
-    if (timeSinceLastDesktopChange > timeForDesktopToBeActive && n != lastActiveDesktopNumber) {
+    if (timeSinceLastDesktopChange > timeForDesktopToBeActive) {
         lastActiveDesktopNumber := _getCurrentDesktopNumber()
     }
 

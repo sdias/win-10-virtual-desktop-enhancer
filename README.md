@@ -12,8 +12,9 @@ Windows 10 Virtual Desktop Enhancer is a [AutoHotkey](https://autohotkey.com/) s
 ## Main resources
 
 - [Installation](docs/installation.md)
-- [Request assistance](docs/issue-page.md)
 - [Customization](docs/settings.md)
+- [Known issues](docs/known-issues.md)
+- [Request assistance](docs/issue-page.md)
 
 ## Installation
 

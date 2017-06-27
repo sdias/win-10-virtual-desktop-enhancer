@@ -71,7 +71,8 @@ global GeneralUseNativePrevNextDesktopSwitchingIfConflicting := (GeneralUseNativ
 
 ; Initialize
 
-global taskbarID=0
+global taskbarPrimaryID=0
+global taskbarSecondaryID=0
 global previousDesktopNo=0
 global doFocusAfterNextSwitch=0
 global hasSwitchedDesktopsBefore=1
@@ -367,10 +368,13 @@ _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIden
 
 _IsCursorHoveringTaskbar() {
     MouseGetPos,,, mouseHoveringID
-    if (!taskbarID) {
-        WinGet, taskbarID, ID, ahk_class Shell_TrayWnd
+    if (!taskbarPrimaryID) {
+        WinGet, taskbarPrimaryID, ID, ahk_class Shell_TrayWnd
     }
-    return (mouseHoveringID == taskbarID)
+    if (!taskbarSecondaryID) {
+        WinGet, taskbarSecondaryID, ID, ahk_class Shell_SecondaryTrayWnd
+    }
+    return (mouseHoveringID == taskbarPrimaryID || mouseHoveringID == taskbarSecondaryID)
 }
 
 _GetCurrentWindowID() {

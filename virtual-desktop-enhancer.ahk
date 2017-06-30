@@ -24,7 +24,7 @@ global RegisterPostMessageHookProc := DllCall("GetProcAddress", Ptr, hVirtualDes
 global UnregisterPostMessageHookProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "UnregisterPostMessageHook", "Ptr")
 global GetCurrentDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "GetCurrentDesktopNumber", "Ptr")
 global GetDesktopCountProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "GetDesktopCount", "Ptr")
-global IsWindowOnCurrentVirtualDesktopProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsWindowOnCurrentVirtualDesktop", "Ptr")
+global IsWindowOnDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsWindowOnDesktopNumber", "Ptr")
 global MoveWindowToDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "MoveWindowToDesktopNumber", "Ptr")
 global IsPinnedWindowProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsPinnedWindow", "Ptr")
 global PinWindowProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "PinWindow", "Ptr")
@@ -74,7 +74,6 @@ global GeneralUseNativePrevNextDesktopSwitchingIfConflicting := (GeneralUseNativ
 global taskbarPrimaryID=0
 global taskbarSecondaryID=0
 global previousDesktopNo=0
-global doFocusAfterNextSwitch=0
 global hasSwitchedDesktopsBefore=1
 
 initialDesktopNo := _GetCurrentDesktopNumber()
@@ -316,12 +315,14 @@ OnTogglePinAppPress() {
 }
 
 OnDesktopSwitch(n:=1) {
+    ; Give focus first, then display the popup, otherwise the popup could
+    ; steal the focus from the legitimate window until it disappears.
+    _Focus()
     if (TooltipsEnabled) {
         _ShowTooltipForDesktopSwitch(n)
     }
     _ChangeAppearance(n)
     _ChangeBackground(n)
-    _FocusIfRequested()
 
     if (previousDesktopNo) {
         _RunProgramWhenSwitchingFromDesktop(previousDesktopNo)
@@ -335,7 +336,6 @@ OnDesktopSwitch(n:=1) {
 ; ======================================================================
 
 SwitchToDesktop(n:=1) {
-    doFocusAfterNextSwitch=1
     _ChangeDesktop(n)
 }
 
@@ -345,7 +345,6 @@ MoveToDesktop(n:=1) {
 }
 
 MoveAndSwitchToDesktop(n:=1) {
-    doFocusAfterNextSwitch=1
     _MoveCurrentWindowToDesktop(n)
     _ChangeDesktop(n)
 }
@@ -535,16 +534,30 @@ _ChangeAppearance(n:=1) {
     }
 }
 
-_FocusIfRequested() {
-    if (doFocusAfterNextSwitch) {
-        _Focus()
-        doFocusAfterNextSwitch=0
-    }
+; Give focus to the foremost window on teh desktop.
+_Focus() {
+    foremostWindowId := _GetforemostWindowIdOnDesktop(_GetCurrentDesktopNumber())
+    WinActivate, ahk_id %foremostWindowId%
 }
 
-_Focus() {
-    WinActivate, ahk_class Shell_TrayWnd
-    SendEvent !{Esc}
+; Select the ahk_id of the foremost window in a given virtual desktop.
+_GetforemostWindowIdOnDesktop(n) {
+    if (n == 0) {
+        n := 10
+    }
+    ; Desktop count starts at 1 for this script, but at 0 for Windows.
+    n -= 1
+
+    ; winIDList contains a list of windows IDs ordered from the top to the bottom for each desktop.
+    WinGet winIDList, list
+    Loop % winIDList {
+        windowID := % winIDList%A_Index%
+        windowIsOnDesktop := DllCall(IsWindowOnDesktopNumberProc, UInt, WindowID, UInt, n)
+        ; Select the first (and foremost) window which is in the specified desktop.
+        if (WindowIsOnDesktop == 1) {
+            return WindowID
+        }
+    }
 }
 
 _ShowTooltip(message:="") {

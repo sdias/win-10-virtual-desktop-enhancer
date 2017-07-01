@@ -241,8 +241,6 @@ OnShiftRightPress() {
 
 OnShiftLastActivePress() {
     ; Shift to the last active desktop.
-
-    global lastActiveDesktopNumber
     
     ; Prepare to switch desktop by saving the target desktop.
     targetDesktopNumber := lastActiveDesktopNumber
@@ -264,8 +262,6 @@ OnMoveRightPress() {
 
 OnMoveLastActivePress() {
     ; Move the window to the last active desktop.
-
-    global lastActiveDesktopNumber
     
     MoveToDesktop(lastActiveDesktopNumber)
 }
@@ -280,8 +276,6 @@ OnMoveAndShiftRightPress() {
 
 OnMoveAndShiftLastActivePress() {
     ; Move the current window to the last active desktop and shift to it.
-    
-    global lastActiveDesktopNumber
     
     ; Prepare to switch desktop by saving the target desktop.
     targetDesktopNumber := lastActiveDesktopNumber
@@ -478,9 +472,7 @@ _MoveCurrentWindowToDesktop(n:=1) {
     DllCall(MoveWindowToDesktopNumberProc, UInt, activeHwnd, UInt, n-1)
 }
 
-_ChangeDesktop(n:=1) {
-    global lastDesktopChangeTime, lastActiveDesktopNumber, timeForDesktopToBeActive
-    
+_ChangeDesktop(n:=1) {    
     ; If this desktop was active for more than 1000ms save it as the last active desktop.
     timeSinceLastDesktopChange := A_TickCount - lastDesktopChangeTime
     lastDesktopChangeTime := A_TickCount

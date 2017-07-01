@@ -163,6 +163,7 @@ The following actions are not executed in the context of a virtual desktop and t
 - Unpin the currently visible app
 - Toggle pin on the currently visible window
 - Toggle pin on the currently visible app
+- Change the current desktop name
 
 For each of these actions, you can set a combination of zero or more modifiers (as before), as well as a regular key.
 For example: if you want to set up a keyboard shortcut to be able to pin the current window, you just need to set up that combination (for example, `Win, Ctrl, Q`).
@@ -228,6 +229,7 @@ _Combination_ keys' settings follow the same rules as [modifier keys' settings](
 | PinApp                       | Pin all of the windows of the currently opened app.           |
 | UnpinWindow                  | Unpin the current window.                                     |
 | UnpinApp                     | Unpin all of the windows of the currently opened app.         |
+| ChangeDesktopName            | Change the name of the current desktop with a popup prompt.   |
 
 ### Example configurations
 
@@ -257,6 +259,7 @@ UnpinWindow=
 UnpinApp=
 ; "SC029" is the key below your "Esc" key
 OpenDesktopManager=LAlt, SC029
+ChangeDesktopName=Win, F2
 ```
 
 The following shortcuts are available:

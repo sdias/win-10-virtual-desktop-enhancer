@@ -77,6 +77,9 @@ global previousDesktopNo=0
 global doFocusAfterNextSwitch=0
 global hasSwitchedDesktopsBefore=1
 
+global changeDesktopNamesPopupTitle := "Windows 10 Virtual Desktop Enhancer"
+global changeDesktopNamesPopupText :=  "Change the desktop name of desktop #{:d}"
+
 initialDesktopNo := _GetCurrentDesktopNumber()
 
 SwitchToDesktop(GeneralDefaultDesktop)
@@ -104,6 +107,7 @@ hkComboPinApp              := KeyboardShortcutsCombinationsPinApp
 hkComboUnpinApp            := KeyboardShortcutsCombinationsUnpinApp
 hkComboTogglePinApp        := KeyboardShortcutsCombinationsTogglePinApp
 hkComboOpenDesktopManager  := KeyboardShortcutsCombinationsOpenDesktopManager
+hkComboChangeDesktopName     := KeyboardShortcutsCombinationsChangeDesktopName
 
 arrayS := Object(),                     arrayR := Object()
 arrayS.Insert("\s*|,"),                 arrayR.Insert("")
@@ -126,6 +130,7 @@ for index in arrayS {
     hkComboUnpinApp           := RegExReplace(hkComboUnpinApp, arrayS[index], arrayR[index])
     hkComboTogglePinApp       := RegExReplace(hkComboTogglePinApp, arrayS[index], arrayR[index])
     hkComboOpenDesktopManager := RegExReplace(hkComboOpenDesktopManager, arrayS[index], arrayR[index])
+    hkComboChangeDesktopName    := RegExReplace(hkComboChangeDesktopName, arrayS[index], arrayR[index])    
 }
 
 ; Setup key bindings dynamically
@@ -191,6 +196,8 @@ setUpHotkeyWithCombo(hkComboUnpinApp, "OnUnpinAppPress", "[KeyboardShortcutsComb
 setUpHotkeyWithCombo(hkComboTogglePinApp, "OnTogglePinAppPress", "[KeyboardShortcutsCombinations] TogglePinApp")
 
 setUpHotkeyWithCombo(hkComboOpenDesktopManager, "OpenDesktopManager", "[KeyboardShortcutsCombinations] OpenDesktopManager")
+
+setUpHotkeyWithCombo(hkComboChangeDesktopName, "ChangeDesktopName", "[KeyboardShortcutsCombinations] ChangeDesktopName")
 
 if (GeneralTaskbarScrollSwitching) {
     Hotkey, ~WheelUp, OnTaskbarScrollUp
@@ -354,6 +361,20 @@ OpenDesktopManager() {
     Send #{Tab}
 }
 
+; Let the user change desktop names with a prompt, without having to edit the 'settings.ini'
+; file and reload the program.
+; The changes are temprorary (names will be overwritten by the default values of
+; 'settings.ini' when the program will be restarted.
+ChangeDesktopName() {
+    currentDesktopNumber := _GetCurrentDesktopNumber()
+    currentDesktopName := _GetDesktopName(currentDesktopNumber)
+    InputBox, newDesktopName, % changeDesktopNamesPopupTitle, % Format(changeDesktopNamesPopupText, _GetCurrentDesktopNumber()), , , , , , , , %currentDesktopName%
+    ; If the user choose "Cancel" ErrorLevel is set to 1.
+    if (ErrorLevel == 0) {
+        _SetDesktopName(currentDesktopNumber, newDesktopName)
+    }
+}
+
 Reload() {
     Reload
 }
@@ -400,6 +421,18 @@ _GetDesktopName(n:=1) {
         name := "Desktop " . n
     }
     return name
+}
+
+; Set the name of the nth desktop to the value of a given string.
+_SetDesktopName(n:=1, name:=0) {
+    if (n == 0) {
+        n := 10
+    }
+    if (!name) {
+        ; Default value: "Desktop N".
+        name := "Desktop " %n%
+    }
+    DesktopNames%n% := name
 }
 
 _GetNextDesktopNumber() {

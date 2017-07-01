@@ -77,6 +77,9 @@ global previousDesktopNo=0
 global doFocusAfterNextSwitch=0
 global hasSwitchedDesktopsBefore=1
 
+global changeDesktopNamesPopupTitle := "Windows 10 Virtual Desktop Enhancer"
+global changeDesktopNamesPopupText :=  "Change the desktop name of desktop #{:d}"
+
 initialDesktopNo := _GetCurrentDesktopNumber()
 
 SwitchToDesktop(GeneralDefaultDesktop)
@@ -365,7 +368,7 @@ OpenDesktopManager() {
 ChangeDesktopName() {
     currentDesktopNumber := _GetCurrentDesktopNumber()
     currentDesktopName := _GetDesktopName(currentDesktopNumber)
-    InputBox, newDesktopName, Change desktop name, Change the desktop name of desktop #%currentDesktopNumber%, , , , , , , , %currentDesktopName%
+    InputBox, newDesktopName, % changeDesktopNamesPopupTitle, % Format(changeDesktopNamesPopupText, _GetCurrentDesktopNumber()), , , , , , , , %currentDesktopName%
     ; If the user choose "Cancel" ErrorLevel is set to 1.
     if (ErrorLevel == 0) {
         _SetDesktopName(currentDesktopNumber, newDesktopName)

@@ -24,7 +24,7 @@ global RegisterPostMessageHookProc := DllCall("GetProcAddress", Ptr, hVirtualDes
 global UnregisterPostMessageHookProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "UnregisterPostMessageHook", "Ptr")
 global GetCurrentDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "GetCurrentDesktopNumber", "Ptr")
 global GetDesktopCountProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "GetDesktopCount", "Ptr")
-global IsWindowOnCurrentVirtualDesktopProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsWindowOnCurrentVirtualDesktop", "Ptr")
+global IsWindowOnDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsWindowOnDesktopNumber", "Ptr")
 global MoveWindowToDesktopNumberProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "MoveWindowToDesktopNumber", "Ptr")
 global IsPinnedWindowProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "IsPinnedWindow", "Ptr")
 global PinWindowProc := DllCall("GetProcAddress", Ptr, hVirtualDesktopAccessor, AStr, "PinWindow", "Ptr")
@@ -323,12 +323,14 @@ OnTogglePinAppPress() {
 }
 
 OnDesktopSwitch(n:=1) {
+    ; Give focus first, then display the popup, otherwise the popup could
+    ; steal the focus from the legitimate window until it disappears.
+    _FocusIfRequested()
     if (TooltipsEnabled) {
         _ShowTooltipForDesktopSwitch(n)
     }
     _ChangeAppearance(n)
     _ChangeBackground(n)
-    _FocusIfRequested()
 
     if (previousDesktopNo) {
         _RunProgramWhenSwitchingFromDesktop(previousDesktopNo)
@@ -568,6 +570,7 @@ _ChangeAppearance(n:=1) {
     }
 }
 
+; Only give focus to the foremost window if it has been requested.
 _FocusIfRequested() {
     if (doFocusAfterNextSwitch) {
         _Focus()
@@ -575,9 +578,30 @@ _FocusIfRequested() {
     }
 }
 
+; Give focus to the foremost window on the desktop.
 _Focus() {
-    WinActivate, ahk_class Shell_TrayWnd
-    SendEvent !{Esc}
+    foremostWindowId := _GetForemostWindowIdOnDesktop(_GetCurrentDesktopNumber())
+    WinActivate, ahk_id %foremostWindowId%
+}
+
+; Select the ahk_id of the foremost window in a given virtual desktop.
+_GetForemostWindowIdOnDesktop(n) {
+    if (n == 0) {
+        n := 10
+    }
+    ; Desktop count starts at 1 for this script, but at 0 for Windows.
+    n -= 1
+
+    ; winIDList contains a list of windows IDs ordered from the top to the bottom for each desktop.
+    WinGet winIDList, list
+    Loop % winIDList {
+        windowID := % winIDList%A_Index%
+        windowIsOnDesktop := DllCall(IsWindowOnDesktopNumberProc, UInt, WindowID, UInt, n)
+        ; Select the first (and foremost) window which is in the specified desktop.
+        if (WindowIsOnDesktop == 1) {
+            return WindowID
+        }
+    }
 }
 
 _ShowTooltip(message:="") {

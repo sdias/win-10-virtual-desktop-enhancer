@@ -74,6 +74,7 @@ global GeneralUseNativePrevNextDesktopSwitchingIfConflicting := (GeneralUseNativ
 global taskbarPrimaryID=0
 global taskbarSecondaryID=0
 global previousDesktopNo=0
+global doFocusAfterNextSwitch=0
 global hasSwitchedDesktopsBefore=1
 
 initialDesktopNo := _GetCurrentDesktopNumber()
@@ -317,7 +318,7 @@ OnTogglePinAppPress() {
 OnDesktopSwitch(n:=1) {
     ; Give focus first, then display the popup, otherwise the popup could
     ; steal the focus from the legitimate window until it disappears.
-    _Focus()
+    _FocusIfRequested()
     if (TooltipsEnabled) {
         _ShowTooltipForDesktopSwitch(n)
     }
@@ -336,6 +337,7 @@ OnDesktopSwitch(n:=1) {
 ; ======================================================================
 
 SwitchToDesktop(n:=1) {
+    doFocusAfterNextSwitch=1
     _ChangeDesktop(n)
 }
 
@@ -345,6 +347,7 @@ MoveToDesktop(n:=1) {
 }
 
 MoveAndSwitchToDesktop(n:=1) {
+    doFocusAfterNextSwitch=1
     _MoveCurrentWindowToDesktop(n)
     _ChangeDesktop(n)
 }
@@ -534,14 +537,22 @@ _ChangeAppearance(n:=1) {
     }
 }
 
-; Give focus to the foremost window on teh desktop.
+; Only give focus to the foremost window if it has been requested.
+_FocusIfRequested() {
+    if (doFocusAfterNextSwitch) {
+        _Focus()
+        doFocusAfterNextSwitch=0
+    }
+}
+
+; Give focus to the foremost window on the desktop.
 _Focus() {
-    foremostWindowId := _GetforemostWindowIdOnDesktop(_GetCurrentDesktopNumber())
+    foremostWindowId := _GetForemostWindowIdOnDesktop(_GetCurrentDesktopNumber())
     WinActivate, ahk_id %foremostWindowId%
 }
 
 ; Select the ahk_id of the foremost window in a given virtual desktop.
-_GetforemostWindowIdOnDesktop(n) {
+_GetForemostWindowIdOnDesktop(n) {
     if (n == 0) {
         n := 10
     }

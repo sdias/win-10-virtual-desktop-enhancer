@@ -15,6 +15,7 @@ source_folder = ".."
 project_repository = Repo(source_folder)
 # These files should not be included in the release.
 ignored_files = (".git", ".gitignore", "*.md", "deploy-release")
+autohotkey_folder = "C:\\Program files\\Autohotkey"
 
 #
 # 0) Verify that we currently are on the 'master' branch (to avoid accidental release of development branches).
@@ -24,7 +25,7 @@ if (current_branch != "master"):
     print("!!! CAUTION !!!")
     print("It looks like you are building a release on branch '" + current_branch + "' instead of 'master'.")
     if input("Are you sure you want to proceed? [y/N] ").lower() != 'y':
-        print("Automatic deployment interrupted successfully.")
+        print("Automatic deployment interrupted by the user.")
         exit()
     else:
         print("Proceeding with automatic deployment on branch '" + current_branch + "'.")
@@ -61,12 +62,15 @@ while new_version is None:
 #
 # 2) Clear the release folder.
 #
+print("Clearing release folder...")
 if os.path.exists(release_folder):
     shutil.rmtree(release_folder)
+print("Done.")
 
 #
 # 3) Copy all the pertinent files into the release folder.
 #
+print("Copying files into release folder...")
 shutil.copytree(
     source_folder,
     release_folder,
@@ -77,10 +81,12 @@ shutil.copytree(
         'deploy-release'    # Do not copy deploy-release into itself.
     )
 )
+print("Done.")
 
 #
 # 4) Convert documentation from Markdown to HTML.
 #
+print("Converting '.md' files into '.html' files...")
 # Load the HTML template from file.
 with open('html_template.html', 'r', encoding="utf-8") as html_template_file:
     html_template = Template(html_template_file.read())
@@ -110,17 +116,27 @@ for root, dirs, files in os.walk(source_folder):
                 os.makedirs(os.path.dirname(html_file_path))
             with open(html_file_path,"w", encoding="utf-8") as out_file:
                 out_file.write(final_html)
+print("Done.")
 
 #
-# 5) Create the final zip file from the copied files.
+# 5) Compile the AutoHotkey script into an executable file.
 #
+print("Compiling '.ahk' script into '.exe' file...")
+call([autohotkey_folder + '\\Compiler\\Ahk2Exe.exe', "/in", release_folder + "\\virtual-desktop-enhancer.ahk", "/out", release_folder + "\\virtual-desktop-enhancer.exe"])
+print("Done.")
+
+#
+# 6) Create the final zip file from the copied files.
+#
+print("Creating zip file of the release folder...")
 shutil.make_archive('Windows.10.Virtual.Desktop.Enhancer.' + new_version_tag, 'zip', release_folder)
+print("Done.")
 
 #
-# 6) Ask the user if he wants to see the diff from last version.
+# 7) Ask the user if he wants to see the diff from last version.
 #
 
 if input("Do you want to see the diff with the previous release? [y/N] ").lower() == 'y':
     call(['git', "diff", latest_version_tag])
 
-print("Done!")
+print("\n\nAutomatic deployment completed!")

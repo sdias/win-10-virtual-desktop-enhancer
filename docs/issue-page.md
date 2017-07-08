@@ -1,8 +1,11 @@
 # Issue page
 
+## Table of contents
+
 <!-- TOC -->
 
 - [Issue page](#issue-page)
+    - [Table of contents](#table-of-contents)
     - [Issue page: what is it?](#issue-page-what-is-it)
     - [Windows 10 Virtual Desktop Enhancer's issue page](#windows-10-virtual-desktop-enhancers-issue-page)
     - [When should I open a new issue?](#when-should-i-open-a-new-issue)

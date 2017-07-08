@@ -1,8 +1,11 @@
 # Installation
 
+## Table of contents
+
 <!-- TOC -->
 
 - [Installation](#installation)
+    - [Table of contents](#table-of-contents)
     - [Prerequisites](#prerequisites)
     - [Procedure](#procedure)
         - [Autostart](#autostart)

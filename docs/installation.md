@@ -1,5 +1,19 @@
 # Installation
 
+<!-- TOC -->
+
+- [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Procedure](#procedure)
+        - [Autostart](#autostart)
+            - [Procedure 1: Autostart folder](#procedure-1-autostart-folder)
+            - [Procedure 2: Task scheduler](#procedure-2-task-scheduler)
+    - [Request assistance](#request-assistance)
+
+<!-- /TOC -->
+
+Click here to go back to the [README](../README.md).
+
 ## Prerequisites
 
 **This application only works on Windows 10 x64 (64 bit) systems** due to limitations in the library used to control the virtual desktops.  
@@ -46,3 +60,5 @@ Please try the first procedure: if it does not work try the second one.
 ## Request assistance
 
 If you have problems with the installation of Windows 10 Virtual Desktop Enhancer please submit a new issue in the project page as described [here](issue-page.md).
+
+Click here to go back to the [README](../README.md).

@@ -9,6 +9,10 @@
 #Include, %A_ScriptDir%\libraries\read-ini.ahk
 #Include, %A_ScriptDir%\libraries\tooltip.ahk
 
+	global AutoWallPaperMode
+	global WallpapersAutoFileRefreshMinutes
+	global currentbackground
+
 ; ======================================================================
 ; Set Up Library Hooks
 ; ======================================================================
@@ -535,10 +539,64 @@ _RunProgramWhenSwitchingFromDesktop(n:=1) {
     _RunProgram(RunProgramWhenSwitchingFromDesktop%n%, "[RunProgramWhenSwitchingFromDesktop] " . n)
 }
 
+;Added By Me (Steve) to refresh Auto.jpg every X min.
+;Add AutoFileRefreshMinutes= to Wallpapers section in ini file!
+;If AutoFileRefreshMinutes=0 then it will only refresh on switching to and from the ~auto.jpg desktop
+
+RefreshBackground() {
+				autobackground = %a_scriptdir%\wallpapers\~Auto.jpg
+				msgbox "currentbak"`n%currentbackground%
+				randombackground := GetRandomBackground(autobackground)
+				FileCopy, %randombackground%, %autobackground%, 1
+				currentbackground = %randombackground%
+				msgbox "chose"`n%currentbackground%
+        filePath := (A_WorkingDir . substr("\\wallpapers\~Auto.jpg", 2))
+        if (filePath and FileExist(filePath)) {
+        		DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, filePath, UInt, 1)
+         		msgbox "background set"
+        }
+}
+
+GetRandomBackground(autobackground) {
+				currentselection = %currentbackground%
+				autofile = %autobackground%
+				newfile = %currentbackground%
+				while (newfile == currentselection or newfile == autofile) {
+						total = 0
+						Loop, %a_scriptdir%\wallpapers\*.jpg {
+										total += 1
+						}
+						Random, select, 1, %total%
+						Loop, %a_scriptdir%\wallpapers\*.jpg{
+										IfEqual, A_Index, %select%, Setenv, newfile, %A_LoopFileFullPath%
+						}
+				}
+				return %newfile%
+}
+
+AutoWallpaperModeOn() {
+		RefreshBackground()
+		Menu, Tray, Add, Refresh Background, RefreshBackground
+		if (WallpapersAutoFileRefreshMinutes < 0) {
+			interval := WallpapersAutoFileRefreshMinutes * 60 * 1000
+			SetTimer, RefreshBackground, %interval%
+		}
+		AutoWallPaperMode = ON
+}
+
+AutoWallpaperModeOff() {
+		Menu, Tray, Delete, Refresh Background
+		SetTimer, RefreshBackground, Off  
+		AutoWallPaperMode = OFF
+}
+
 _ChangeBackground(n:=1) {
     line := Wallpapers%n%
     isHex := RegExMatch(line, "^0x([0-9A-Fa-f]{1,6})", hexMatchTotal)
     if (isHex) {
+		 		if (AutoWallPaperMode == "ON") {
+						AutoWallpaperModeOff()
+        }
         hexColorReversed := SubStr("00000" . hexMatchTotal1, -5)
 
         RegExMatch(hexColorReversed, "^([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})", match)
@@ -547,9 +605,21 @@ _ChangeBackground(n:=1) {
         DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "", UInt, 1)
         DllCall("SetSysColors", "Int", 1, "Int*", 1, "UInt*", hexColor)
     }
+    else if (line = "~Auto.jpg") {
+    		if (WallpapersAutoFileRefreshMinutes = "" or WallpapersAutoFileRefreshMinutes = "None") Then {
+						;Do Nothing
+						;How do I make this just go to whatever ~Auto.jpg is?
+		        MsgBox, 16, Error, In file "settings.ini" You have defined "~Auto.jpg" without the refersh interval "AutoFileRefreshMinutes=".
+				}
+				else {
+						AutoWallpaperModeOn()
+				}
+    }
     else {
+		 		if (AutoWallPaperMode == "ON") {
+						AutoWallpaperModeOff()
+        }
         filePath := line
-
         isRelative := (substr(filePath, 1, 1) == ".")
         if (isRelative) {
             filePath := (A_WorkingDir . substr(filePath, 2))
@@ -559,6 +629,8 @@ _ChangeBackground(n:=1) {
         }
     }
 }
+
+;End Modified by Steve
 
 _ChangeAppearance(n:=1) {
     Menu, Tray, Tip, % _GetDesktopName(n)

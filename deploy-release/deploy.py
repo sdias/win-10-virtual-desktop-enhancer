@@ -1,8 +1,9 @@
 # This script automates the deployment of a new version of Windows 10 Virtual Desktop Enhancer.
 
 import os
+import sys
 import shutil
-from git import Repo                    # pip install GItPython
+from git import Repo                    # pip install GitPython
 from markdown import markdown           # pip install markdown
 from semantic_version import Version    # pip install semantic_version
 from string import Template
@@ -26,7 +27,7 @@ if (current_branch != "master"):
     print("It looks like you are building a release on branch '" + current_branch + "' instead of 'master'.")
     if input("Are you sure you want to proceed? [y/N] ").lower() != 'y':
         print("Automatic deployment interrupted by the user.")
-        exit()
+        sys.exit()
     else:
         print("Proceeding with automatic deployment on branch '" + current_branch + "'.")
 
@@ -40,7 +41,7 @@ try:
     latest_version = Version(latest_version_tag)
 except ValueError as e:
     print("The latest version of the program (" + latest_version_tag + ") did not follow the correct naming convention. Unable to proceed with the automatic deployment.")
-    exit()
+    sys.exit()
 
 # Ask for the new version number and verify that it is valid.
 new_version = None

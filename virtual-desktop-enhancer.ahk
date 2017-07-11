@@ -375,6 +375,7 @@ ChangeDesktopName() {
     if (ErrorLevel == 0) {
         _SetDesktopName(currentDesktopNumber, newDesktopName)
     }
+    _ChangeAppearance(currentDesktopNumber)
 }
 
 Reload() {

@@ -1,4 +1,23 @@
-# Issue page: what is it?
+# Issue page
+
+## Table of contents
+
+<!-- TOC -->
+
+- [Issue page](#issue-page)
+    - [Table of contents](#table-of-contents)
+    - [Issue page: what is it?](#issue-page-what-is-it)
+    - [Windows 10 Virtual Desktop Enhancer's issue page](#windows-10-virtual-desktop-enhancers-issue-page)
+    - [When should I open a new issue?](#when-should-i-open-a-new-issue)
+    - [What to include in the issue?](#what-to-include-in-the-issue)
+        - [Example of an useless issue](#example-of-an-useless-issue)
+        - [Example of a useful issue](#example-of-a-useful-issue)
+
+<!-- /TOC -->
+
+Click here to go back to the [README](../README.md).
+
+## Issue page: what is it?
 
 The _Issue page_ of a project is a service on GitHub which, despite its name, lets the users and  the developers of a project communicate easily about pretty much anything related to the project itself.  
 Its main use is to submit bugs and problem found while using the program, but, depending on the project and its administrators it can also be used to ask for new features in next releases, ask questions and receive help.
@@ -8,7 +27,7 @@ Its main use is to submit bugs and problem found while using the program, but, d
 [Here](https://github.com/sdias/win-10-virtual-desktop-enhancer/issues/) you can find Windows 10 Virtual Desktop Enhancer's Issue page.  
 If you open that link you will find a list of open issues (which have not been solved yet) and old closed (solved) issues as well.
 
-### When should I open a new issue?
+## When should I open a new issue?
 
 If you have found yourself in any of these situations:
 
@@ -23,7 +42,7 @@ If you did not find any issue related to your case then you can submit a new iss
 
 **Important note:** if you want to comment on an issue or open a new one you will need to login with your GitHub account. If you don't have one you can register [here](https://github.com/join): it's a really quick procedure.
 
-### What to include in the issue?
+## What to include in the issue?
 
 If you are reporting a problem or a bug, please include as much details as you can, for example:
 
@@ -32,14 +51,14 @@ If you are reporting a problem or a bug, please include as much details as you c
 - Is this a recurring issue or a one-time event?
 - Have you tried anything to solve it? Have you had any form of success?
 
-#### Example of an useless issue
+### Example of an useless issue
 
 > Title: **Program not working**
 > Message: The program does not work: I cannot use it correctly as it sometimes stops working.
 
 This description of the problem is exceptionally vague and offers little to no ground for the developers to work on to understand, isolate and solve the problem.
 
-#### Example of a useful issue
+### Example of a useful issue
 
 > Title: **Program crashes when switching desktops**
 > Message: Since I installed the last version of the program sometimes as I switch desktops it crashes without giving any error message: it just shuts down (the icon in the tray bar disappears).  
@@ -47,3 +66,5 @@ This description of the problem is exceptionally vague and offers little to no g
 
 This is a great description of the problem: the user reported many extremely useful information, such as a possible version number which introduced the bug, a meaningful description of what happens and an hypothesis on what action triggers the crash.  
 Obviously you will not always be able to give so much useful information, however _the more details you can report the better it is_.
+
+Click here to go back to the [README](../README.md).

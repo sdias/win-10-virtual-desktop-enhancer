@@ -7,10 +7,18 @@ For a complete list of all the issues reported for this project visit [this page
 
 ## Table of contents
 
-- [Programs run as another user](#programs-run-as-another-user)
-- [Remote Desktop Protocol](#remote-desktop-protocol)
-- [Synergy and AutoHotkey](#synergy-and-autohotkey)
-- [Windows 10 Game Bar](#windows-10-game-bar)
+<!-- TOC -->
+
+- [Known issues](#known-issues)
+    - [Table of contents](#table-of-contents)
+        - [Programs run as another user](#programs-run-as-another-user)
+        - [Remote Desktop Protocol](#remote-desktop-protocol)
+        - [Synergy and AutoHotkey](#synergy-and-autohotkey)
+        - [Windows 10 Game Bar](#windows-10-game-bar)
+
+<!-- /TOC -->
+
+Click here to go back to the [README](../README.md).
 
 ### Programs run as another user
 
@@ -64,3 +72,5 @@ Although it has not been possible to pinpoint exactly what the root cause of thi
 
  - Disabling the Windows Game Bar (recommended if it's not used on your computer). [Here is a guide](https://www.howtogeek.com/273180/how-to-disable-windows-10s-game-dvr-and-game-bar/) explaining how to do it
  - Not using the `Alt` key (neither alone nor with other keys) nor the `Win` key alone (it looks to be fine if used together with other keys) in your custom hotkeys setup (recommended if you want to use the Game Bar on your computer). See the [customization page](settings.md#keyboard-shortcuts) of this documentation for further details
+
+Click here to go back to the [README](../README.md).

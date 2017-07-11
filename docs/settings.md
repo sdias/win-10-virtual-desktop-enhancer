@@ -5,14 +5,36 @@ Mainly you will have to edit some lines in the `settings.ini` file in the main f
 
 ## Table of contents
 
-- [Main settings](#main-settings)
-- [Custom wallpapers](#custom-wallpapers)
-- [Desktop names](#desktop-names)
-- [Tooltips](#tooltips)
-- [Keyboard shortcuts](#keyboard-shortcuts)
-- [Run programs when switching desktops](#run-programs-when-switching-desktops)
-- [Tray icon](#tray-icon)
-- [Old settings migration](#old-settings-migration)
+<!-- TOC -->
+
+- [Personalize the settings](#personalize-the-settings)
+    - [Table of contents](#table-of-contents)
+    - [Main settings](#main-settings)
+    - [Custom wallpapers](#custom-wallpapers)
+        - [Image wallpapers](#image-wallpapers)
+        - [Solid color wallpapers](#solid-color-wallpapers)
+        - [Example configuration](#example-configuration)
+    - [Desktop names](#desktop-names)
+        - [Example configuration](#example-configuration-1)
+    - [Tooltips](#tooltips)
+        - [Example configuration](#example-configuration-2)
+    - [Keyboard shortcuts](#keyboard-shortcuts)
+        - [Available shortcuts](#available-shortcuts)
+            - [Keyboard shortcuts modifier keys](#keyboard-shortcuts-modifier-keys)
+            - [Keyboard shortcuts identifier keys](#keyboard-shortcuts-identifier-keys)
+            - [Keyboard shortcuts combinations](#keyboard-shortcuts-combinations)
+        - [Example configurations](#example-configurations)
+            - [Default configuration](#default-configuration)
+            - [Custom configuration](#custom-configuration)
+    - [Run programs when switching desktops](#run-programs-when-switching-desktops)
+        - [Example configuration](#example-configuration-3)
+    - [Tray Icon](#tray-icon)
+        - [Icon Packs](#icon-packs)
+    - [Old settings migration](#old-settings-migration)
+
+<!-- /TOC -->
+
+Click here to go back to the [README](../README.md).
 
 ## Main settings
 
@@ -408,3 +430,5 @@ NextTenDesktops=
 PreviousDesktop=Left
 NextDesktop=Right
 ```
+
+Click here to go back to the [README](../README.md).

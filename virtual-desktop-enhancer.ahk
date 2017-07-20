@@ -9,9 +9,9 @@
 #Include, %A_ScriptDir%\libraries\read-ini.ahk
 #Include, %A_ScriptDir%\libraries\tooltip.ahk
 
-	global AutoWallPaperMode
-	global WallpapersAutoFileRefreshMinutes
-	global currentbackground
+global AutoWallPaperMode
+global WallpapersAutoFileRefreshMinutes
+global currentbackground
 
 ; ======================================================================
 ; Set Up Library Hooks
@@ -539,85 +539,83 @@ _RunProgramWhenSwitchingFromDesktop(n:=1) {
     _RunProgram(RunProgramWhenSwitchingFromDesktop%n%, "[RunProgramWhenSwitchingFromDesktop] " . n)
 }
 
-;Added By Me (Steve) to refresh Auto.jpg every X min.
+;Added By Me (Steve) to refresh rotate backrounds every X min or at desktop change.
 ;Add AutoFileRefreshMinutes= to Wallpapers section in ini file!
-;If AutoFileRefreshMinutes=0 then it will only refresh on switching to and from the ~auto.jpg desktop
+;If AutoFileRefreshMinutes=0 then it will only refresh on switching to and from the auto desktop
+;change backround of desktop to "*Auto*" to enable automatic background rotation for that desktop
 
 RefreshBackground() {
-				autobackground = %a_scriptdir%\wallpapers\~Auto.jpg
-				msgbox "currentbak"`n%currentbackground%
-				randombackground := GetRandomBackground(autobackground)
-				FileCopy, %randombackground%, %autobackground%, 1
-				currentbackground = %randombackground%
-				msgbox "chose"`n%currentbackground%
-        filePath := (A_WorkingDir . substr("\\wallpapers\~Auto.jpg", 2))
-        if (filePath and FileExist(filePath)) {
-        		DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, filePath, UInt, 1)
-         		msgbox "background set"
-        }
+    randombackground := GetRandomBackground(multiplemonitorbackround)
+    currentbackground = %randombackground%
+    if (currentbackground and FileExist(currentbackground)) {
+    DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, currentbackground, UInt, 1)
+    }
 }
 
-GetRandomBackground(autobackground) {
-				currentselection = %currentbackground%
-				autofile = %autobackground%
-				newfile = %currentbackground%
-				while (newfile == currentselection or newfile == autofile) {
-						total = 0
-						Loop, %a_scriptdir%\wallpapers\*.jpg {
-										total += 1
-						}
-						Random, select, 1, %total%
-						Loop, %a_scriptdir%\wallpapers\*.jpg{
-										IfEqual, A_Index, %select%, Setenv, newfile, %A_LoopFileFullPath%
-						}
-				}
-				return %newfile%
+GetRandomBackground(multiplemonitorbackround) {
+    currentselection = %currentbackground%
+    resfile = %multiplemonitorbackround%
+    newfile = %currentbackground%
+    while (newfile == currentselection or newfile == resfile) {
+        total = 0
+	Loop, %a_scriptdir%\wallpapers\*.jpg {
+	    total += 1
+	}
+	Random, select, 1, %total%
+	Loop, %a_scriptdir%\wallpapers\*.jpg{
+            IfEqual, A_Index, %select%, Setenv, newfile, %A_LoopFileFullPath%
+	}
+    }
+    return %newfile%
 }
 
 AutoWallpaperModeOn() {
-		RefreshBackground()
-		Menu, Tray, Add, Refresh Background, RefreshBackground
-		if (WallpapersAutoFileRefreshMinutes < 0) {
-			interval := WallpapersAutoFileRefreshMinutes * 60 * 1000
-			SetTimer, RefreshBackground, %interval%
-		}
-		AutoWallPaperMode = ON
+    RefreshBackground()
+    Menu, Tray, Add, Refresh Background, RefreshBackground
+    Menu, Tray, Add, Find Background, FindBackgroundWinExplorer
+    if (WallpapersAutoFileRefreshMinutes < 0) {
+        interval := WallpapersAutoFileRefreshMinutes * 60 * 1000
+        SetTimer, RefreshBackground, %interval%
+    }
+    AutoWallPaperMode = ON
 }
 
 AutoWallpaperModeOff() {
-		Menu, Tray, Delete, Refresh Background
-		SetTimer, RefreshBackground, Off  
-		AutoWallPaperMode = OFF
+    Menu, Tray, Delete, Refresh Background
+    Menu, Tray, Delete, Find Background
+    SetTimer, RefreshBackground, Off  
+    AutoWallPaperMode = OFF
+}
+
+FindBackgroundWinExplorer() {
+    explorerpath:= "explorer /select," currentbackground
+    Run, %explorerpath%
 }
 
 _ChangeBackground(n:=1) {
     line := Wallpapers%n%
     isHex := RegExMatch(line, "^0x([0-9A-Fa-f]{1,6})", hexMatchTotal)
     if (isHex) {
-		 		if (AutoWallPaperMode == "ON") {
-						AutoWallpaperModeOff()
+        if (AutoWallPaperMode == "ON") {
+             AutoWallpaperModeOff()
         }
         hexColorReversed := SubStr("00000" . hexMatchTotal1, -5)
-
         RegExMatch(hexColorReversed, "^([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})", match)
         hexColor := "0x" . match3 . match2 . match1, hexColor += 0
-
         DllCall("SystemParametersInfo", UInt, 0x14, UInt, 0, Str, "", UInt, 1)
         DllCall("SetSysColors", "Int", 1, "Int*", 1, "UInt*", hexColor)
     }
-    else if (line = "~Auto.jpg") {
-    		if (WallpapersAutoFileRefreshMinutes = "" or WallpapersAutoFileRefreshMinutes = "None") Then {
-						;Do Nothing
-						;How do I make this just go to whatever ~Auto.jpg is?
-		        MsgBox, 16, Error, In file "settings.ini" You have defined "~Auto.jpg" without the refersh interval "AutoFileRefreshMinutes=".
-				}
-				else {
-						AutoWallpaperModeOn()
-				}
+    else if (line = "") {
+        if (WallpapersAutoFileRefreshMinutes = "" or WallpapersAutoFileRefreshMinutes = "None") Then {
+            MsgBox, 16, Error, In file "settings.ini" You have defined "*Auto*" without the refersh interval "AutoFileRefreshMinutes=".
+	}
+	else {
+            AutoWallpaperModeOn()
+        }
     }
     else {
-		 		if (AutoWallPaperMode == "ON") {
-						AutoWallpaperModeOff()
+        if (AutoWallPaperMode == "ON") {
+            AutoWallpaperModeOff()
         }
         filePath := line
         isRelative := (substr(filePath, 1, 1) == ".")

@@ -56,9 +56,13 @@ Please try the first procedure: if it does not work try the second one.
 4. Choose a name and a description for the task (e.g. "win10-virtual-desktop-enhancer starter") and press "Next"
 5. Choose "When I log on" and click "Next"
 6. Choose "Start a program" and click "Next"
-7. Click on "Browse" and select the "virtual-desktop-enhancer.exe" file in the folder where you have extracted it and click "Next"
-8. Verify that all the settings are correct and click "End"
-9. You can now close the window: if you restart the computer Windows 10 Virtual Desktop Enhancer should start automatically
+7. Click on "Browse", find the folder where you placed the `virtual-desktop-enhancer.exe`, open it, select the `virtual-desktop-enhancer.exe` file and click "Open"
+8. Copy the content of the "Program/script" field in the "Open in (optional)" field, then remove everything that comes after the last `\` character in that field. For example `C:\Users\USERNAME\Desktop\win10den.exe` would become `C:\Users\USERNAME\Desktop\`
+9. Verify that all the settings are correct, select "Open the Properties dialog for this task when I click finish" and click "Finish"
+10. In the Properties dialog you can check "Run with highest privileges" in the "General" tab if your account has administrative rights and you want to run the program as administrator
+11. In the "Conditions" tab you probably want to uncheck **both** "Stop if the computer switches to battery power" and "Start the task only if the computer is on AC power" if you are tunning this on a laptop
+12. In the "Settings" tab you might want to uncheck "Stop the task if it runs longer than..."
+13. You can now close the window: if you restart the computer Windows 10 Virtual Desktop Enhancer should start automatically
 
 ## Request assistance
 

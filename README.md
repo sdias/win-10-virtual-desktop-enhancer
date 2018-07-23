@@ -48,3 +48,5 @@ Thanks to rob3110 on Reddit for the extra white icon theme.
 Thanks to several people on reddit.com/r/windows10 and in the project's Github page for their suggestions.
 
 Thanks to mlabaj (Martin Labaj) for his code for the window pinning functionality.
+
+Thanks to chpock for his fixes related to the Windows 10 1803 update.

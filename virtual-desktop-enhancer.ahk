@@ -82,10 +82,11 @@ global changeDesktopNamesPopupText :=  "Change the desktop name of desktop #{:d}
 
 initialDesktopNo := _GetCurrentDesktopNumber()
 
-SwitchToDesktop(GeneralDefaultDesktop)
-; Call "OnDesktopSwitch" since it wouldn't be called otherwise, if the default desktop matches the current one
-if (GeneralDefaultDesktop == initialDesktopNo) {
-    OnDesktopSwitch(GeneralDefaultDesktop)
+if (GeneralDefaultDesktop != "" && GeneralDefaultDesktop > 0 && GeneralDefaultDesktop != initialDesktopNo) {
+    SwitchToDesktop(GeneralDefaultDesktop)
+} else {
+    ; Call "OnDesktopSwitch" since it wouldn't be called otherwise
+    OnDesktopSwitch(initialDesktopNo)
 }
 
 ; ======================================================================

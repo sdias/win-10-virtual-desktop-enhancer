@@ -202,12 +202,17 @@ Also note that if a setting is set to empty or not set at all, the feature corre
 
 Each _modifier_ keys' setting can be a combination of the `Ctrl`, `Shift`, `Alt`, `Win` keys, separated by commas. For each key, you can use the left or right variant of the keys specifically, by adding `L` or `R` before the name of the key (e.g. `LCtrl`), otherwise both can be used. See below for examples.
 
-| Name                         | Description                                 |
-| ---------------------------- | ------------------------------------------- |
-| SwitchDesktop                | Switch to a desktop.                        |
-| MoveWindowToDesktop          | Move the current window to another desktop. |
-| MoveWindowAndSwitchToDesktop | Move the current window to another desktop, and switch to it. |
-| NextTenDesktops              | If doing any of the actions above and targeting a specific desktop (ex: Switch to desktop no. 3) it instead targets the desktop that comes 10 desktops after that one (ex: Switch to desktop no. 13 instead of no. 3). Note that this modifier works together with the modifiers above. |
+Separate modifier keys can be used with the previous/next desktop identifier keys versus the desktop number X identifier keys.
+
+| Name                            | Description                                       |
+| ------------------------------- | ------------------------------------------------- |
+| SwitchDesktopNum                | Switch to desktop number X.                       |
+| MoveWindowToDesktopNum          | Move the current window to desktop number X.      |
+| MoveWindowAndSwitchToDesktopNum | Move the current window to desktop number X, and switch to it. |
+| NextTenDesktops                 | If doing any of the actions above, it instead targets the desktop that comes 10 desktops after that one (ex: Switch to desktop no. 13 instead of no. 3). Note that this modifier works together with the modifiers above. |
+| SwitchDesktopDir                | Switch to previous/next desktop.                  |
+| MoveWindowToDesktopDir          | Move the current window to previous/next desktop. |
+| MoveWindowAndSwitchToDesktopDir | Move the current window to previous/next desktop, and switch to it. |
 
 #### Keyboard shortcuts identifier keys
 
@@ -263,14 +268,27 @@ With this configuration:
 
 ```ini
 [KeyboardShortcutsModifiers]
-SwitchDesktop=Win, Ctrl
-MoveWindowToDesktop=
-MoveWindowAndSwitchToDesktop=Win, Ctrl, Shift
+SwitchDesktopNum=Win, Ctrl
+MoveWindowToDesktopNum=
+MoveWindowAndSwitchToDesktopNum=Win, Ctrl, Shift
 NextTenDesktops=
+SwitchDesktopDir=Win, Ctrl
+MoveWindowToDesktopDir=
+MoveWindowAndSwitchToDesktopDir=Win, Ctrl, Shift
 
 [KeyboardShortcutsIdentifiers]
 PreviousDesktop=Left
 NextDesktop=Right
+Desktop1=1
+Desktop2=2
+Desktop3=3
+Desktop4=4
+Desktop5=5
+Desktop6=6
+Desktop7=7
+Desktop8=8
+Desktop9=9
+Desktop10=0
 
 [KeyboardShortcutsCombinations]
 TogglePinWindow=Win, Ctrl, Shift, Q
@@ -310,14 +328,27 @@ The following shortcuts are available:
 With this configuration:
 ```ini
 [KeyboardShortcutsModifiers]
-SwitchDesktop=LAlt
-MoveWindowToDesktop=LAlt, Shift
-MoveWindowAndSwitchToDesktop=LAlt, Ctrl, Shift
+SwitchDesktopNum=LAlt
+MoveWindowToDesktopNum=LAlt, Shift
+MoveWindowAndSwitchToDesktopNum=LAlt, Ctrl, Shift
 NextTenDesktops=Win
+SwitchDesktopDir=LAlt
+MoveWindowToDesktopDir=LAlt, Shift
+MoveWindowAndSwitchToDesktopDir=LAlt, Ctrl, Shift
 
 [KeyboardShortcutsIdentifiers]
 PreviousDesktop=PgUp
 NextDesktop=PgDn
+Desktop1=1
+Desktop2=2
+Desktop3=3
+Desktop4=4
+Desktop5=5
+Desktop6=6
+Desktop7=7
+Desktop8=8
+Desktop9=9
+Desktop10=0
 
 [KeyboardShortcutsCombinations]
 TogglePinWindow=

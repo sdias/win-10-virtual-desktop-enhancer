@@ -46,6 +46,7 @@ The main settings are found in the `[General]` section of the `settings.ini` fil
 | TaskbarScrollSwitching                         | If scrolling over the taskbar will switch desktops.                                                                 | `1`, `0` (Meaning YES and NO respectively) |
 | UseNativePrevNextDesktopSwitchingIfConflicting | Whether to switch between desktops instantly or with the default Windows transition if the shortcuts conflict.      | `1`, `0` (Meaning YES and NO respectively) |
 | DesktopWrapping                                | If going right from the last desktop should take you to the first one and vice-versa.                               | `1`, `0` (Meaning YES and NO respectively) |
+| IconDir                                        | Directory path to look for icons in. (default: icons/)                                                              | A valid directory path                     |
 
 ## Custom wallpapers
 
@@ -419,9 +420,25 @@ If you click on it the desktop management screen will be displayed.
 
 ### Icon Packs
 
-By default the white text on black background icon pack is set, but more packs are available: to change between them, go into the "icons" folder and extract the ZIP file for the theme you want to use, and replace any existing files if prompted.
+By default the white text on black background icon pack is set, but more packs are available. They are subdirectories of the icons/ directory. To change between them set the IconDir setting to one of the subdirectories.
 
-To create personalized custom packs, simply create one icon per desktop and name them appropriately (`[desktop number goes here].ico`, ex: `1.ico`, `5.ico`, `99.ico`). If the current desktop does not have an icon for it, the `+.ico` icon is shown instead, so make sure you create that as well for your pack.
+To create personalized custom packs, simply create one icon per desktop and name them appropriately (`[desktop number goes here].ico`, ex: `1.ico`, `5.ico`, `99.ico`). If the current desktop does not have an icon for it, the `+.ico` icon is shown instead, so make sure you create that as well for your pack. 
+
+The desktop number is used as the icon name by default, but you can also set custom icon filenames per desktop by setting icon filenames (relative to the IconDir) in the Icons section. Here is an example of a working configuration:
+
+```ini
+[Icons]
+1=work.ico
+2=games.ico
+3=movies.ico
+4=presentations.ico
+5=
+6=
+7=
+8=
+9=
+10=
+```
 
 ## Old settings migration
 

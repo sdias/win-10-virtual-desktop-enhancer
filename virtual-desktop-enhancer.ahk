@@ -68,6 +68,8 @@ global TooltipsFontInBold := (TooltipsFontInBold != "" and TooltipsFontInBold ~=
 global TooltipsFontColor := (TooltipsFontColor != "" and TooltipsFontColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsFontColor : "0xFFFFFF"
 global TooltipsBackgroundColor := (TooltipsBackgroundColor != "" and TooltipsBackgroundColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsBackgroundColor : "0x1F1F1F"
 global GeneralUseNativePrevNextDesktopSwitchingIfConflicting := (GeneralUseNativePrevNextDesktopSwitchingIfConflicting ~= "^[01]$" && GeneralUseNativePrevNextDesktopSwitchingIfConflicting == "1" ? true : false)
+global GeneralIconDir := GeneralIconDir != "" ? GeneralIconDir : "icons/"
+global GeneralIconDir := GeneralIconDir ~= "/$" ? GeneralIconDir : GeneralIconDir . "/"
 
 ; Initialize
 
@@ -555,11 +557,12 @@ _ChangeBackground(n:=1) {
 
 _ChangeAppearance(n:=1) {
     Menu, Tray, Tip, % _GetDesktopName(n)
-    if (FileExist("./icons/" . n ".ico")) {
-        Menu, Tray, Icon, icons/%n%.ico
+    iconFile := Icons%n% ? Icons%n% : n . ".ico"
+    if (FileExist(GeneralIconDir . iconFile)) {
+        Menu, Tray, Icon, %GeneralIconDir%%iconFile%
     }
     else {
-        Menu, Tray, Icon, icons/+.ico
+        Menu, Tray, Icon, %GeneralIconDir%+.ico
     }
 }
 

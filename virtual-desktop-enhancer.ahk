@@ -156,8 +156,8 @@ setUpHotkeyWithCombo(combo, handler, settingPaths) {
     combo <> "" ? setUpHotkey(combo, handler, settingPaths) :
 }
 
-i := 0
-while (i < 10) {
+i := 1
+while (i <= 10) {
     hkDesktopI0 := KeyboardShortcutsIdentifiersDesktop%i%
     hkDesktopI1 := KeyboardShortcutsIdentifiersDesktopAlt%i%
     j := 0

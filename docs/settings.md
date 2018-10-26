@@ -30,6 +30,7 @@ Mainly you will have to edit some lines in the `settings.ini` file in the main f
         - [Example configuration](#example-configuration-3)
     - [Tray Icon](#tray-icon)
         - [Icon Packs](#icon-packs)
+    - ["Hidden" Desktops](#hidden-desktops)
     - [Old settings migration](#old-settings-migration)
 
 <!-- /TOC -->
@@ -46,6 +47,7 @@ The main settings are found in the `[General]` section of the `settings.ini` fil
 | TaskbarScrollSwitching                         | If scrolling over the taskbar will switch desktops.                                                                 | `1`, `0` (Meaning YES and NO respectively) |
 | UseNativePrevNextDesktopSwitchingIfConflicting | Whether to switch between desktops instantly or with the default Windows transition if the shortcuts conflict.      | `1`, `0` (Meaning YES and NO respectively) |
 | DesktopWrapping                                | If going right from the last desktop should take you to the first one and vice-versa.                               | `1`, `0` (Meaning YES and NO respectively) |
+| NumberOfCyclableDesktops                       | Limit the number of desktops that can be cycled with the previous/next desktop keys. 0 means cycle all desktops.    | The number of desktops to cycle            |
 | IconDir                                        | Directory path to look for icons in. (default: icons/)                                                              | A valid directory path                     |
 
 ## Custom wallpapers
@@ -439,6 +441,11 @@ The desktop number is used as the icon name by default, but you can also set cus
 9=
 10=
 ```
+
+## "Hidden" Desktops
+
+By default the previous/next desktop keys will cycle through all virtual desktops. However, you may want to cycle through only some desktops and have others that are only accessible via the switch to desktop number X keys or the desktop manager. For example, if you have 10 virtual desktops, but you set the global setting NumberOfCyclableDesktops to 5, the previous/next keys will only cycle between desktops 1-5. Desktop 6 can still be accessed with the "switch to desktop no. 6" key, for example.
+
 
 ## Old settings migration
 

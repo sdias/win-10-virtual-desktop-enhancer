@@ -68,6 +68,7 @@ global TooltipsFontInBold := (TooltipsFontInBold != "" and TooltipsFontInBold ~=
 global TooltipsFontColor := (TooltipsFontColor != "" and TooltipsFontColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsFontColor : "0xFFFFFF"
 global TooltipsBackgroundColor := (TooltipsBackgroundColor != "" and TooltipsBackgroundColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsBackgroundColor : "0x1F1F1F"
 global GeneralUseNativePrevNextDesktopSwitchingIfConflicting := (GeneralUseNativePrevNextDesktopSwitchingIfConflicting ~= "^[01]$" && GeneralUseNativePrevNextDesktopSwitchingIfConflicting == "1" ? true : false)
+global GeneralNumberOfCyclableDesktops := GeneralNumberOfCyclableDesktops >= 1 ? GeneralNumberOfCyclableDesktops : 0
 global GeneralIconDir := GeneralIconDir != "" ? GeneralIconDir : "icons/"
 global GeneralIconDir := GeneralIconDir ~= "/$" ? GeneralIconDir : GeneralIconDir . "/"
 
@@ -444,9 +445,9 @@ _SetDesktopName(n:=1, name:=0) {
 _GetNextDesktopNumber() {
     i := _GetCurrentDesktopNumber()
 	if (GeneralDesktopWrapping == 1) {
-		i := (i == _GetNumberOfDesktops() ? 1 : i + 1)
+		i := (i >= _GetNumberOfCyclableDesktops() ? 1 : i + 1)
 	} else {
-		i := (i == _GetNumberOfDesktops() ? i : i + 1)
+		i := (i >= _GetNumberOfCyclableDesktops() ? i : i + 1)
 	}
 
     return i
@@ -454,8 +455,10 @@ _GetNextDesktopNumber() {
 
 _GetPreviousDesktopNumber() {
     i := _GetCurrentDesktopNumber()
-	if (GeneralDesktopWrapping == 1) {
-		i := (i == 1 ? _GetNumberOfDesktops() : i - 1)
+    if (i > _GetNumberOfCyclableDesktops()) {
+        i := _GetNumberOfCyclableDesktops()
+    } else if (GeneralDesktopWrapping == 1) {
+		i := (i == 1 ? _GetNumberOfCyclableDesktops() : i - 1)
 	} else {
 		i := (i == 1 ? i : i - 1)
 	}
@@ -469,6 +472,14 @@ _GetCurrentDesktopNumber() {
 
 _GetNumberOfDesktops() {
     return DllCall(GetDesktopCountProc)
+}
+
+_GetNumberOfCyclableDesktops() {
+    numDesktops := _GetNumberOfDesktops()
+    if (GeneralNumberOfCyclableDesktops >= 1) {
+        numDesktops := Min(numDesktops, GeneralNumberOfCyclableDesktops)
+    }
+    return numDesktops
 }
 
 _MoveCurrentWindowToDesktop(n:=1) {

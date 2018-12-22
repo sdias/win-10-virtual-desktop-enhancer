@@ -1,4 +1,8 @@
-# Windows 10 Virtual Desktop Enhancer - Home
+# Windows 10 Virtual Desktop Enhancer
+
+**Warning:** I am officially no longer maintaining this project due to lack of time and interest. Thanks for using it and for all of your work towards helping me improve it. -sdias
+
+## Introduction
 
 Windows 10 Virtual Desktop Enhancer is a [AutoHotkey](https://autohotkey.com/) script which adds some useful features to Windows 10 Virtual Desktops, like:
 

@@ -76,6 +76,9 @@ global taskbarSecondaryID=0
 global previousDesktopNo=0
 global doFocusAfterNextSwitch=0
 global hasSwitchedDesktopsBefore=1
+global lastActiveDesktopNumber := _GetCurrentDesktopNumber()
+global lastDesktopChangeTime := A_TickCount
+global timeForDesktopToBeActive=1000
 
 global changeDesktopNamesPopupTitle := "Windows 10 Virtual Desktop Enhancer"
 global changeDesktopNamesPopupText :=  "Change the desktop name of desktop #{:d}"
@@ -100,6 +103,7 @@ hkModifiersMoveAndSwitch   := KeyboardShortcutsModifiersMoveWindowAndSwitchToDes
 hkModifiersPlusTen         := KeyboardShortcutsModifiersNextTenDesktops
 hkIdentifierPrevious       := KeyboardShortcutsIdentifiersPreviousDesktop
 hkIdentifierNext           := KeyboardShortcutsIdentifiersNextDesktop
+hkIdentifierLastActive     := KeyboardShortcutsIdentifiersLastActiveDesktop
 hkComboPinWin              := KeyboardShortcutsCombinationsPinWindow
 hkComboUnpinWin            := KeyboardShortcutsCombinationsUnpinWindow
 hkComboTogglePinWin        := KeyboardShortcutsCombinationsTogglePinWindow
@@ -180,12 +184,15 @@ if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDeskto
 if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierNext))) {
     setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierNext, "OnShiftRightPress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
 }
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierLastActive, "OnShiftLastActivePress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] LastActiveDesktop")
 
 setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierPrevious, "OnMoveLeftPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
 setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierNext, "OnMoveRightPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierLastActive, "OnMoveLastActivePress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] LastActiveDesktop")
 
 setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkIdentifierPrevious, "OnMoveAndShiftLeftPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
 setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkIdentifierNext, "OnMoveAndShiftRightPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkIdentifierLastActive, "OnMoveAndShiftLastActivePress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsIdentifiers] LastActiveDesktop")
 
 setUpHotkeyWithCombo(hkComboPinWin, "OnPinWindowPress", "[KeyboardShortcutsCombinations] PinWindow")
 setUpHotkeyWithCombo(hkComboUnpinWin, "OnUnpinWindowPress", "[KeyboardShortcutsCombinations] UnpinWindow")
@@ -240,6 +247,19 @@ OnShiftRightPress() {
     SwitchToDesktop(_GetNextDesktopNumber())
 }
 
+OnShiftLastActivePress() {
+    ; Shift to the last active desktop.
+    
+    ; Prepare to switch desktop by saving the target desktop.
+    targetDesktopNumber := lastActiveDesktopNumber
+    ; Save the current desktop as the last active desktop.
+    ; This lets the user rapidly switch back and forth between the two last active desktops
+    ; without waiting timeForDesktopToBeActive milliseconds.
+    lastActiveDesktopNumber := _getCurrentDesktopNumber()
+    lastActiveDesktopChangeTime := A_TickCount
+    SwitchToDesktop(targetDesktopNumber)
+}
+
 OnMoveLeftPress() {
     MoveToDesktop(_GetPreviousDesktopNumber())
 }
@@ -248,12 +268,31 @@ OnMoveRightPress() {
     MoveToDesktop(_GetNextDesktopNumber())
 }
 
+OnMoveLastActivePress() {
+    ; Move the window to the last active desktop.
+    
+    MoveToDesktop(lastActiveDesktopNumber)
+}
+
 OnMoveAndShiftLeftPress() {
     MoveAndSwitchToDesktop(_GetPreviousDesktopNumber())
 }
 
 OnMoveAndShiftRightPress() {
     MoveAndSwitchToDesktop(_GetNextDesktopNumber())
+}
+
+OnMoveAndShiftLastActivePress() {
+    ; Move the current window to the last active desktop and shift to it.
+    
+    ; Prepare to switch desktop by saving the target desktop.
+    targetDesktopNumber := lastActiveDesktopNumber
+    ; Save the current desktop as the last active desktop.
+    ; This lets the user rapidly switch back and forth between the two last active desktops
+    ; without waiting timeForDesktopToBeActive milliseconds.
+    lastActiveDesktopNumber := _getCurrentDesktopNumber()
+    lastActiveDesktopChangeTime := A_TickCount
+    MoveAndSwitchToDesktop(targetDesktopNumber)
 }
 
 OnTaskbarScrollUp() {
@@ -473,7 +512,15 @@ _MoveCurrentWindowToDesktop(n:=1) {
     DllCall(MoveWindowToDesktopNumberProc, UInt, activeHwnd, UInt, n-1)
 }
 
-_ChangeDesktop(n:=1) {
+_ChangeDesktop(n:=1) {    
+    ; If this desktop was active for more than 1000ms save it as the last active desktop.
+    timeSinceLastDesktopChange := A_TickCount - lastDesktopChangeTime
+    lastDesktopChangeTime := A_TickCount
+    if (timeSinceLastDesktopChange > timeForDesktopToBeActive) {
+        lastActiveDesktopNumber := _getCurrentDesktopNumber()
+    }
+
+    ; Change desktop.
     if (n == 0) {
         n := 10
     }

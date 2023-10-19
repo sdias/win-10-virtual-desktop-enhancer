@@ -30,6 +30,7 @@ Mainly you will have to edit some lines in the `settings.ini` file in the main f
         - [Example configuration](#example-configuration-3)
     - [Tray Icon](#tray-icon)
         - [Icon Packs](#icon-packs)
+    - ["Hidden" Desktops](#hidden-desktops)
     - [Old settings migration](#old-settings-migration)
 
 <!-- /TOC -->
@@ -40,12 +41,14 @@ Click here to go back to the [README](../README.md).
 
 The main settings are found in the `[General]` section of the `settings.ini` file and are used to define some basic settings of the program.  
 
-| Setting                                        | Description                                                                                                        | Valid Values                               |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
-| DefaultDesktop                                 | Which desktop will be used as default (The program will switch to this desktop when started).                      | Any valid desktop number                   |
-| TaskbarScrollSwitching                         | If scrolling over the taskbar will switch desktops.                                                                | `1`, `0` (Meaning YES and NO respectively) |
-| UseNativePrevNextDesktopSwitchingIfConflicting | Whether to switch between desktops instantly or with the default Windows transition if the shortcuts conflict.     | `1`, `0` (Meaning YES and NO respectively) |
-| DesktopWrapping                                | If going right from the last desktop should take you to the first one and vice-versa.                              | `1`, `0` (Meaning YES and NO respectively) |
+| Setting                                        | Description                                                                                                         | Valid Values                               |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------  | ------------------------------------------ |
+| DefaultDesktop                                 | Which desktop will be used as default (The program will switch to this desktop when started). 0 means don't switch. | Any valid desktop number or 0              |
+| TaskbarScrollSwitching                         | If scrolling over the taskbar will switch desktops.                                                                 | `1`, `0` (Meaning YES and NO respectively) |
+| UseNativePrevNextDesktopSwitchingIfConflicting | Whether to switch between desktops instantly or with the default Windows transition if the shortcuts conflict.      | `1`, `0` (Meaning YES and NO respectively) |
+| DesktopWrapping                                | If going right from the last desktop should take you to the first one and vice-versa.                               | `1`, `0` (Meaning YES and NO respectively) |
+| NumberOfCyclableDesktops                       | Limit the number of desktops that can be cycled with the previous/next desktop keys. 0 means cycle all desktops.    | The number of desktops to cycle            |
+| IconDir                                        | Directory path to look for icons in. (default: icons/)                                                              | A valid directory path                     |
 
 ## Custom wallpapers
 
@@ -202,12 +205,17 @@ Also note that if a setting is set to empty or not set at all, the feature corre
 
 Each _modifier_ keys' setting can be a combination of the `Ctrl`, `Shift`, `Alt`, `Win` keys, separated by commas. For each key, you can use the left or right variant of the keys specifically, by adding `L` or `R` before the name of the key (e.g. `LCtrl`), otherwise both can be used. See below for examples.
 
-| Name                         | Description                                 |
-| ---------------------------- | ------------------------------------------- |
-| SwitchDesktop                | Switch to a desktop.                        |
-| MoveWindowToDesktop          | Move the current window to another desktop. |
-| MoveWindowAndSwitchToDesktop | Move the current window to another desktop, and switch to it. |
-| NextTenDesktops              | If doing any of the actions above and targeting a specific desktop (ex: Switch to desktop no. 3) it instead targets the desktop that comes 10 desktops after that one (ex: Switch to desktop no. 13 instead of no. 3). Note that this modifier works together with the modifiers above. |
+Separate modifier keys can be used with the previous/next desktop identifier keys versus the desktop number X identifier keys.
+
+| Name                            | Description                                       |
+| ------------------------------- | ------------------------------------------------- |
+| SwitchDesktopNum                | Switch to desktop number X.                       |
+| MoveWindowToDesktopNum          | Move the current window to desktop number X.      |
+| MoveWindowAndSwitchToDesktopNum | Move the current window to desktop number X, and switch to it. |
+| NextTenDesktops                 | If doing any of the actions above, it instead targets the desktop that comes 10 desktops after that one (ex: Switch to desktop no. 13 instead of no. 3). Note that this modifier works together with the modifiers above. |
+| SwitchDesktopDir                | Switch to previous/next desktop.                  |
+| MoveWindowToDesktopDir          | Move the current window to previous/next desktop. |
+| MoveWindowAndSwitchToDesktopDir | Move the current window to previous/next desktop, and switch to it. |
 
 #### Keyboard shortcuts identifier keys
 
@@ -263,14 +271,27 @@ With this configuration:
 
 ```ini
 [KeyboardShortcutsModifiers]
-SwitchDesktop=Win, Ctrl
-MoveWindowToDesktop=
-MoveWindowAndSwitchToDesktop=Win, Ctrl, Shift
+SwitchDesktopNum=Win, Ctrl
+MoveWindowToDesktopNum=
+MoveWindowAndSwitchToDesktopNum=Win, Ctrl, Shift
 NextTenDesktops=
+SwitchDesktopDir=Win, Ctrl
+MoveWindowToDesktopDir=
+MoveWindowAndSwitchToDesktopDir=Win, Ctrl, Shift
 
 [KeyboardShortcutsIdentifiers]
 PreviousDesktop=Left
 NextDesktop=Right
+Desktop1=1
+Desktop2=2
+Desktop3=3
+Desktop4=4
+Desktop5=5
+Desktop6=6
+Desktop7=7
+Desktop8=8
+Desktop9=9
+Desktop10=0
 
 [KeyboardShortcutsCombinations]
 TogglePinWindow=Win, Ctrl, Shift, Q
@@ -310,14 +331,27 @@ The following shortcuts are available:
 With this configuration:
 ```ini
 [KeyboardShortcutsModifiers]
-SwitchDesktop=LAlt
-MoveWindowToDesktop=LAlt, Shift
-MoveWindowAndSwitchToDesktop=LAlt, Ctrl, Shift
+SwitchDesktopNum=LAlt
+MoveWindowToDesktopNum=LAlt, Shift
+MoveWindowAndSwitchToDesktopNum=LAlt, Ctrl, Shift
 NextTenDesktops=Win
+SwitchDesktopDir=LAlt
+MoveWindowToDesktopDir=LAlt, Shift
+MoveWindowAndSwitchToDesktopDir=LAlt, Ctrl, Shift
 
 [KeyboardShortcutsIdentifiers]
 PreviousDesktop=PgUp
 NextDesktop=PgDn
+Desktop1=1
+Desktop2=2
+Desktop3=3
+Desktop4=4
+Desktop5=5
+Desktop6=6
+Desktop7=7
+Desktop8=8
+Desktop9=9
+Desktop10=0
 
 [KeyboardShortcutsCombinations]
 TogglePinWindow=
@@ -388,9 +422,30 @@ If you click on it the desktop management screen will be displayed.
 
 ### Icon Packs
 
-By default the white text on black background icon pack is set, but more packs are available: to change between them, go into the "icons" folder and extract the ZIP file for the theme you want to use, and replace any existing files if prompted.
+By default the white text on black background icon pack is set, but more packs are available. They are subdirectories of the icons/ directory. To change between them set the IconDir setting to one of the subdirectories.
 
-To create personalized custom packs, simply create one icon per desktop and name them appropriately (`[desktop number goes here].ico`, ex: `1.ico`, `5.ico`, `99.ico`). If the current desktop does not have an icon for it, the `+.ico` icon is shown instead, so make sure you create that as well for your pack.
+To create personalized custom packs, simply create one icon per desktop and name them appropriately (`[desktop number goes here].ico`, ex: `1.ico`, `5.ico`, `99.ico`). If the current desktop does not have an icon for it, the `+.ico` icon is shown instead, so make sure you create that as well for your pack. 
+
+The desktop number is used as the icon name by default, but you can also set custom icon filenames per desktop by setting icon filenames (relative to the IconDir) in the Icons section. Here is an example of a working configuration:
+
+```ini
+[Icons]
+1=work.ico
+2=games.ico
+3=movies.ico
+4=presentations.ico
+5=
+6=
+7=
+8=
+9=
+10=
+```
+
+## "Hidden" Desktops
+
+By default the previous/next desktop keys will cycle through all virtual desktops. However, you may want to cycle through only some desktops and have others that are only accessible via the switch to desktop number X keys or the desktop manager. For example, if you have 10 virtual desktops, but you set the global setting NumberOfCyclableDesktops to 5, the previous/next keys will only cycle between desktops 1-5. Desktop 6 can still be accessed with the "switch to desktop no. 6" key, for example.
+
 
 ## Old settings migration
 

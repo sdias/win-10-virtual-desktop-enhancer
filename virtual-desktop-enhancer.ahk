@@ -68,6 +68,9 @@ global TooltipsFontInBold := (TooltipsFontInBold != "" and TooltipsFontInBold ~=
 global TooltipsFontColor := (TooltipsFontColor != "" and TooltipsFontColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsFontColor : "0xFFFFFF"
 global TooltipsBackgroundColor := (TooltipsBackgroundColor != "" and TooltipsBackgroundColor ~= "^0x[0-9A-Fa-f]{1,6}$") ? TooltipsBackgroundColor : "0x1F1F1F"
 global GeneralUseNativePrevNextDesktopSwitchingIfConflicting := (GeneralUseNativePrevNextDesktopSwitchingIfConflicting ~= "^[01]$" && GeneralUseNativePrevNextDesktopSwitchingIfConflicting == "1" ? true : false)
+global GeneralNumberOfCyclableDesktops := GeneralNumberOfCyclableDesktops >= 1 ? GeneralNumberOfCyclableDesktops : 0
+global GeneralIconDir := GeneralIconDir != "" ? GeneralIconDir : "icons/"
+global GeneralIconDir := GeneralIconDir ~= "/$" ? GeneralIconDir : GeneralIconDir . "/"
 
 ; Initialize
 
@@ -75,17 +78,18 @@ global taskbarPrimaryID=0
 global taskbarSecondaryID=0
 global previousDesktopNo=0
 global doFocusAfterNextSwitch=0
-global hasSwitchedDesktopsBefore=1
+global numberedHotkeys={}
 
 global changeDesktopNamesPopupTitle := "Windows 10 Virtual Desktop Enhancer"
 global changeDesktopNamesPopupText :=  "Change the desktop name of desktop #{:d}"
 
 initialDesktopNo := _GetCurrentDesktopNumber()
 
-SwitchToDesktop(GeneralDefaultDesktop)
-; Call "OnDesktopSwitch" since it wouldn't be called otherwise, if the default desktop matches the current one
-if (GeneralDefaultDesktop == initialDesktopNo) {
-    OnDesktopSwitch(GeneralDefaultDesktop)
+if (GeneralDefaultDesktop != "" && GeneralDefaultDesktop > 0 && GeneralDefaultDesktop != initialDesktopNo) {
+    SwitchToDesktop(GeneralDefaultDesktop)
+} else {
+    ; Call "OnDesktopSwitch" since it wouldn't be called otherwise
+    OnDesktopSwitch(initialDesktopNo)
 }
 
 ; ======================================================================
@@ -94,20 +98,23 @@ if (GeneralDefaultDesktop == initialDesktopNo) {
 
 ; Translate the modifier keys strings
 
-hkModifiersSwitch          := KeyboardShortcutsModifiersSwitchDesktop
-hkModifiersMove            := KeyboardShortcutsModifiersMoveWindowToDesktop
-hkModifiersMoveAndSwitch   := KeyboardShortcutsModifiersMoveWindowAndSwitchToDesktop
-hkModifiersPlusTen         := KeyboardShortcutsModifiersNextTenDesktops
-hkIdentifierPrevious       := KeyboardShortcutsIdentifiersPreviousDesktop
-hkIdentifierNext           := KeyboardShortcutsIdentifiersNextDesktop
-hkComboPinWin              := KeyboardShortcutsCombinationsPinWindow
-hkComboUnpinWin            := KeyboardShortcutsCombinationsUnpinWindow
-hkComboTogglePinWin        := KeyboardShortcutsCombinationsTogglePinWindow
-hkComboPinApp              := KeyboardShortcutsCombinationsPinApp
-hkComboUnpinApp            := KeyboardShortcutsCombinationsUnpinApp
-hkComboTogglePinApp        := KeyboardShortcutsCombinationsTogglePinApp
-hkComboOpenDesktopManager  := KeyboardShortcutsCombinationsOpenDesktopManager
-hkComboChangeDesktopName     := KeyboardShortcutsCombinationsChangeDesktopName
+hkModifiersSwitchNum        := KeyboardShortcutsModifiersSwitchDesktopNum
+hkModifiersMoveNum          := KeyboardShortcutsModifiersMoveWindowToDesktopNum
+hkModifiersMoveAndSwitchNum := KeyboardShortcutsModifiersMoveWindowAndSwitchToDesktopNum
+hkModifiersPlusTen          := KeyboardShortcutsModifiersNextTenDesktops
+hkModifiersSwitchDir        := KeyboardShortcutsModifiersSwitchDesktopDir
+hkModifiersMoveDir          := KeyboardShortcutsModifiersMoveWindowToDesktopDir
+hkModifiersMoveAndSwitchDir := KeyboardShortcutsModifiersMoveWindowAndSwitchToDesktopDir
+hkIdentifierPrevious        := KeyboardShortcutsIdentifiersPreviousDesktop
+hkIdentifierNext            := KeyboardShortcutsIdentifiersNextDesktop
+hkComboPinWin               := KeyboardShortcutsCombinationsPinWindow
+hkComboUnpinWin             := KeyboardShortcutsCombinationsUnpinWindow
+hkComboTogglePinWin         := KeyboardShortcutsCombinationsTogglePinWindow
+hkComboPinApp               := KeyboardShortcutsCombinationsPinApp
+hkComboUnpinApp             := KeyboardShortcutsCombinationsUnpinApp
+hkComboTogglePinApp         := KeyboardShortcutsCombinationsTogglePinApp
+hkComboOpenDesktopManager   := KeyboardShortcutsCombinationsOpenDesktopManager
+hkComboChangeDesktopName    := KeyboardShortcutsCombinationsChangeDesktopName
 
 arrayS := Object(),                     arrayR := Object()
 arrayS.Insert("\s*|,"),                 arrayR.Insert("")
@@ -119,73 +126,79 @@ arrayS.Insert("Alt"),                   arrayR.Insert("!")
 arrayS.Insert("Win"),                   arrayR.Insert("#")
 
 for index in arrayS {
-    hkModifiersSwitch         := RegExReplace(hkModifiersSwitch, arrayS[index], arrayR[index])
-    hkModifiersMove           := RegExReplace(hkModifiersMove, arrayS[index], arrayR[index])
-    hkModifiersMoveAndSwitch  := RegExReplace(hkModifiersMoveAndSwitch, arrayS[index], arrayR[index])
-    hkModifiersPlusTen        := RegExReplace(hkModifiersPlusTen, arrayS[index], arrayR[index])
-    hkComboPinWin             := RegExReplace(hkComboPinWin, arrayS[index], arrayR[index])
-    hkComboUnpinWin           := RegExReplace(hkComboUnpinWin, arrayS[index], arrayR[index])
-    hkComboTogglePinWin       := RegExReplace(hkComboTogglePinWin, arrayS[index], arrayR[index])
-    hkComboPinApp             := RegExReplace(hkComboPinApp, arrayS[index], arrayR[index])
-    hkComboUnpinApp           := RegExReplace(hkComboUnpinApp, arrayS[index], arrayR[index])
-    hkComboTogglePinApp       := RegExReplace(hkComboTogglePinApp, arrayS[index], arrayR[index])
-    hkComboOpenDesktopManager := RegExReplace(hkComboOpenDesktopManager, arrayS[index], arrayR[index])
+    hkModifiersSwitchNum        := RegExReplace(hkModifiersSwitchNum, arrayS[index], arrayR[index])
+    hkModifiersMoveNum          := RegExReplace(hkModifiersMoveNum, arrayS[index], arrayR[index])
+    hkModifiersMoveAndSwitchNum := RegExReplace(hkModifiersMoveAndSwitchNum, arrayS[index], arrayR[index])
+    hkModifiersPlusTen          := RegExReplace(hkModifiersPlusTen, arrayS[index], arrayR[index])
+    hkModifiersSwitchDir        := RegExReplace(hkModifiersSwitchDir, arrayS[index], arrayR[index])
+    hkModifiersMoveDir          := RegExReplace(hkModifiersMoveDir, arrayS[index], arrayR[index])
+    hkModifiersMoveAndSwitchDir := RegExReplace(hkModifiersMoveAndSwitchDir, arrayS[index], arrayR[index])
+    hkComboPinWin               := RegExReplace(hkComboPinWin, arrayS[index], arrayR[index])
+    hkComboUnpinWin             := RegExReplace(hkComboUnpinWin, arrayS[index], arrayR[index])
+    hkComboTogglePinWin         := RegExReplace(hkComboTogglePinWin, arrayS[index], arrayR[index])
+    hkComboPinApp               := RegExReplace(hkComboPinApp, arrayS[index], arrayR[index])
+    hkComboUnpinApp             := RegExReplace(hkComboUnpinApp, arrayS[index], arrayR[index])
+    hkComboTogglePinApp         := RegExReplace(hkComboTogglePinApp, arrayS[index], arrayR[index])
+    hkComboOpenDesktopManager   := RegExReplace(hkComboOpenDesktopManager, arrayS[index], arrayR[index])
     hkComboChangeDesktopName    := RegExReplace(hkComboChangeDesktopName, arrayS[index], arrayR[index])    
 }
 
 ; Setup key bindings dynamically
 ;  If they are set incorrectly in the settings, an error will be thrown.
 
-setUpHotkey(hk, handler, settingPaths) {
+setUpHotkey(hk, handler, settingPaths, n:=0) {
     Hotkey, %hk%, %handler%, UseErrorLevel
     if (ErrorLevel <> 0) {
         MsgBox, 16, Error, One or more keyboard shortcut settings have been defined incorrectly in the settings file: `n%settingPaths%. `n`nPlease read the README for instructions.
         Exit
     }
+    if (n) {
+        numberedHotkeys[hk] := n
+    }
 }
 
-setUpHotkeyWithOneSetOfModifiersAndIdentifier(modifiers, identifier, handler, settingPaths) {
-    modifiers <> "" && identifier <> "" ? setUpHotkey(modifiers . identifier, handler, settingPaths) :
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(modifiers, identifier, handler, settingPaths, n:=0) {
+    modifiers <> "" && identifier <> "" ? setUpHotkey(modifiers . identifier, handler, settingPaths, n) :
 }
 
-setUpHotkeyWithTwoSetOfModifiersAndIdentifier(modifiersA, modifiersB, identifier, handler, settingPaths) {
-    modifiersA <> "" && modifiersB <> "" && identifier <> "" ? setUpHotkey(modifiersA . modifiersB . identifier, handler, settingPaths) :
+setUpHotkeyWithTwoSetOfModifiersAndIdentifier(modifiersA, modifiersB, identifier, handler, settingPaths, n:=0) {
+    modifiersA <> "" && modifiersB <> "" && identifier <> "" ? setUpHotkey(modifiersA . modifiersB . identifier, handler, settingPaths, n) :
 }
 
 setUpHotkeyWithCombo(combo, handler, settingPaths) {
     combo <> "" ? setUpHotkey(combo, handler, settingPaths) :
 }
 
-i := 0
-while (i < 10) {
+i := 1
+numDesktops := Max(_GetNumberOfDesktops(), 10)
+while (i <= numDesktops) {
     hkDesktopI0 := KeyboardShortcutsIdentifiersDesktop%i%
     hkDesktopI1 := KeyboardShortcutsIdentifiersDesktopAlt%i%
     j := 0
     while (j < 2) {
         hkDesktopI := hkDesktopI%j%
-        setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkDesktopI, "OnShiftNumberedPress", "[KeyboardShortcutsModifiers] SwitchDesktop")
-        setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkDesktopI, "OnMoveNumberedPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop")
-        setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkDesktopI, "OnMoveAndShiftNumberedPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop")
-        setUpHotkeyWithTwoSetOfModifiersAndIdentifier(hkModifiersSwitch, hkModifiersPlusTen, hkDesktopI, "OnShiftNumberedPressNextTen", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsModifiers] NextTenDesktops")
-        setUpHotkeyWithTwoSetOfModifiersAndIdentifier(hkModifiersMove, hkModifiersPlusTen, hkDesktopI, "OnMoveNumberedPressNextTen", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsModifiers] NextTenDesktops")
-        setUpHotkeyWithTwoSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkModifiersPlusTen, hkDesktopI, "OnMoveAndShiftNumberedPressNextTen", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsModifiers] NextTenDesktops")
+        setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitchNum, hkDesktopI, "OnShiftNumberedPress", "[KeyboardShortcutsModifiers] SwitchDesktopNum", i)
+        setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveNum, hkDesktopI, "OnMoveNumberedPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktopNum", i)
+        setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitchNum, hkDesktopI, "OnMoveAndShiftNumberedPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktopNum", i)
+        setUpHotkeyWithTwoSetOfModifiersAndIdentifier(hkModifiersSwitchNum, hkModifiersPlusTen, hkDesktopI, "OnShiftNumberedPressNextTen", "[KeyboardShortcutsModifiers] SwitchDesktopNum, [KeyboardShortcutsModifiers] NextTenDesktops", i)
+        setUpHotkeyWithTwoSetOfModifiersAndIdentifier(hkModifiersMoveNum, hkModifiersPlusTen, hkDesktopI, "OnMoveNumberedPressNextTen", "[KeyboardShortcutsModifiers] MoveWindowToDesktopNum, [KeyboardShortcutsModifiers] NextTenDesktops", i)
+        setUpHotkeyWithTwoSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitchNum, hkModifiersPlusTen, hkDesktopI, "OnMoveAndShiftNumberedPressNextTen", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktopNum, [KeyboardShortcutsModifiers] NextTenDesktops", i)
         j := j + 1
     }
     i := i + 1
 }
-
-if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierPrevious))) {
-    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierPrevious, "OnShiftLeftPress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
+if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitchDir, hkIdentifierPrevious))) {
+    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitchDir, hkIdentifierPrevious, "OnShiftLeftPress", "[KeyboardShortcutsModifiers] SwitchDesktopDir, [KeyboardShortcutsIdentifiers] PreviousDesktop")
 }
-if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitch, hkIdentifierNext))) {
-    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitch, hkIdentifierNext, "OnShiftRightPress", "[KeyboardShortcutsModifiers] SwitchDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
+if (!(GeneralUseNativePrevNextDesktopSwitchingIfConflicting && _IsPrevNextDesktopSwitchingKeyboardShortcutConflicting(hkModifiersSwitchDir, hkIdentifierNext))) {
+    setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersSwitchDir, hkIdentifierNext, "OnShiftRightPress", "[KeyboardShortcutsModifiers] SwitchDesktopDir, [KeyboardShortcutsIdentifiers] NextDesktop")
 }
 
-setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierPrevious, "OnMoveLeftPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
-setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMove, hkIdentifierNext, "OnMoveRightPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveDir, hkIdentifierPrevious, "OnMoveLeftPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktopDir, [KeyboardShortcutsIdentifiers] PreviousDesktop")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveDir, hkIdentifierNext, "OnMoveRightPress", "[KeyboardShortcutsModifiers] MoveWindowToDesktopDir, [KeyboardShortcutsIdentifiers] NextDesktop")
 
-setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkIdentifierPrevious, "OnMoveAndShiftLeftPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsIdentifiers] PreviousDesktop")
-setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitch, hkIdentifierNext, "OnMoveAndShiftRightPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktop, [KeyboardShortcutsIdentifiers] NextDesktop")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitchDir, hkIdentifierPrevious, "OnMoveAndShiftLeftPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktopDir, [KeyboardShortcutsIdentifiers] PreviousDesktop")
+setUpHotkeyWithOneSetOfModifiersAndIdentifier(hkModifiersMoveAndSwitchDir, hkIdentifierNext, "OnMoveAndShiftRightPress", "[KeyboardShortcutsModifiers] MoveWindowAndSwitchToDesktopDir, [KeyboardShortcutsIdentifiers] NextDesktop")
 
 setUpHotkeyWithCombo(hkComboPinWin, "OnPinWindowPress", "[KeyboardShortcutsCombinations] PinWindow")
 setUpHotkeyWithCombo(hkComboUnpinWin, "OnUnpinWindowPress", "[KeyboardShortcutsCombinations] UnpinWindow")
@@ -209,27 +222,24 @@ if (GeneralTaskbarScrollSwitching) {
 ; ======================================================================
 
 OnShiftNumberedPress() {
-    SwitchToDesktop(substr(A_ThisHotkey, 0, 1))
-}
-
-OnShiftNumberedPressNextTen() {
-    SwitchToDesktop(1 . substr(A_ThisHotkey, 0, 1))
+    n := numberedHotkeys[A_ThisHotkey]
+    if (n) {
+        SwitchToDesktop(n)
+    }
 }
 
 OnMoveNumberedPress() {
-    MoveToDesktop(substr(A_ThisHotkey, 0, 1))
-}
-
-OnMoveNumberedPressNextTen() {
-    MoveToDesktop(1 . substr(A_ThisHotkey, 0, 1))
+    n := numberedHotkeys[A_ThisHotkey]
+    if (n) {
+        MoveToDesktop(n)
+    }
 }
 
 OnMoveAndShiftNumberedPress() {
-    MoveAndSwitchToDesktop(substr(A_ThisHotkey, 0, 1))
-}
-
-OnMoveAndShiftNumberedPressNextTen() {
-    MoveAndSwitchToDesktop(1 . substr(A_ThisHotkey, 0, 1))
+    n := numberedHotkeys[A_ThisHotkey]
+    if (n) {
+        MoveAndSwitchToDesktop(n)
+    }
 }
 
 OnShiftLeftPress() {
@@ -416,9 +426,6 @@ _TruncateString(string:="", n:=10) {
 }
 
 _GetDesktopName(n:=1) {
-    if (n == 0) {
-        n := 10
-    }
     name := DesktopNames%n%
     if (!name) {
         name := "Desktop " . n
@@ -428,9 +435,6 @@ _GetDesktopName(n:=1) {
 
 ; Set the name of the nth desktop to the value of a given string.
 _SetDesktopName(n:=1, name:=0) {
-    if (n == 0) {
-        n := 10
-    }
     if (!name) {
         ; Default value: "Desktop N".
         name := "Desktop " %n%
@@ -441,9 +445,9 @@ _SetDesktopName(n:=1, name:=0) {
 _GetNextDesktopNumber() {
     i := _GetCurrentDesktopNumber()
 	if (GeneralDesktopWrapping == 1) {
-		i := (i == _GetNumberOfDesktops() ? 1 : i + 1)
+		i := (i >= _GetNumberOfCyclableDesktops() ? 1 : i + 1)
 	} else {
-		i := (i == _GetNumberOfDesktops() ? i : i + 1)
+		i := (i >= _GetNumberOfCyclableDesktops() ? i : i + 1)
 	}
 
     return i
@@ -451,8 +455,10 @@ _GetNextDesktopNumber() {
 
 _GetPreviousDesktopNumber() {
     i := _GetCurrentDesktopNumber()
-	if (GeneralDesktopWrapping == 1) {
-		i := (i == 1 ? _GetNumberOfDesktops() : i - 1)
+    if (i > _GetNumberOfCyclableDesktops()) {
+        i := _GetNumberOfCyclableDesktops()
+    } else if (GeneralDesktopWrapping == 1) {
+		i := (i == 1 ? _GetNumberOfCyclableDesktops() : i - 1)
 	} else {
 		i := (i == 1 ? i : i - 1)
 	}
@@ -468,15 +474,20 @@ _GetNumberOfDesktops() {
     return DllCall(GetDesktopCountProc)
 }
 
+_GetNumberOfCyclableDesktops() {
+    numDesktops := _GetNumberOfDesktops()
+    if (GeneralNumberOfCyclableDesktops >= 1) {
+        numDesktops := Min(numDesktops, GeneralNumberOfCyclableDesktops)
+    }
+    return numDesktops
+}
+
 _MoveCurrentWindowToDesktop(n:=1) {
     activeHwnd := _GetCurrentWindowID()
     DllCall(MoveWindowToDesktopNumberProc, UInt, activeHwnd, UInt, n-1)
 }
 
 _ChangeDesktop(n:=1) {
-    if (n == 0) {
-        n := 10
-    }
     DllCall(GoToDesktopNumberProc, Int, n-1)
 }
 
@@ -523,16 +534,10 @@ _RunProgram(program:="", settingName:="") {
 }
 
 _RunProgramWhenSwitchingToDesktop(n:=1) {
-    if (n == 0) {
-        n := 10
-    }
     _RunProgram(RunProgramWhenSwitchingToDesktop%n%, "[RunProgramWhenSwitchingToDesktop] " . n)
 }
 
 _RunProgramWhenSwitchingFromDesktop(n:=1) {
-    if (n == 0) {
-        n := 10
-    }
     _RunProgram(RunProgramWhenSwitchingFromDesktop%n%, "[RunProgramWhenSwitchingFromDesktop] " . n)
 }
 
@@ -563,11 +568,12 @@ _ChangeBackground(n:=1) {
 
 _ChangeAppearance(n:=1) {
     Menu, Tray, Tip, % _GetDesktopName(n)
-    if (FileExist("./icons/" . n ".ico")) {
-        Menu, Tray, Icon, icons/%n%.ico
+    iconFile := Icons%n% ? Icons%n% : n . ".ico"
+    if (FileExist(GeneralIconDir . iconFile)) {
+        Menu, Tray, Icon, %GeneralIconDir%%iconFile%
     }
     else {
-        Menu, Tray, Icon, icons/+.ico
+        Menu, Tray, Icon, %GeneralIconDir%+.ico
     }
 }
 
@@ -587,9 +593,6 @@ _Focus() {
 
 ; Select the ahk_id of the foremost window in a given virtual desktop.
 _GetForemostWindowIdOnDesktop(n) {
-    if (n == 0) {
-        n := 10
-    }
     ; Desktop count starts at 1 for this script, but at 0 for Windows.
     n -= 1
 
@@ -618,9 +621,6 @@ _ShowTooltip(message:="") {
 }
 
 _ShowTooltipForDesktopSwitch(n:=1) {
-    if (n == 0) {
-        n := 10
-    }
     _ShowTooltip(_GetDesktopName(n))
 }
 
